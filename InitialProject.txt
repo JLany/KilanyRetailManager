@@ -1,3 +1,0 @@
-We need to build a desktop app that runs a cash register, handles inventory, and manages entire store. In order to allow it to grow, though, we will build a WebAPI layer.
-
-These requirements are very broad, thus need further investigation and analysis. Try to plan out the thing.

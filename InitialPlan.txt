@@ -1,9 +1,0 @@
-I want to build a MVP (Minimum Viable Product) that we can expand to cover all the features we need over time. 
-
-The first step is getting all of the major pieces set up, including:
-- Git on Azure DevOps
-- SQL Server Database
-- WebAPI with authentication
-- WPF application that can log into the API
-
-GET THESE SET UP FIRST! 
