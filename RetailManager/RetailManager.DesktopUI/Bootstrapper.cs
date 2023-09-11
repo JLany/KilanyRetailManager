@@ -1,9 +1,11 @@
 ﻿using Caliburn.Micro;
+using RetailManager.DesktopUI.Helpers;
 using RetailManager.DesktopUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RetailManager.DesktopUI
 {
@@ -14,6 +16,11 @@ namespace RetailManager.DesktopUI
 		public Bootstrapper()
 		{
 			Initialize();
+
+			ConventionManager.AddElementConvention<PasswordBox>(
+				PasswordBoxHelper.BoundPasswordProperty,
+				"Password",
+				"PasswordChanged");
 		}
 
 		protected override void OnStartup(object sender, StartupEventArgs e)
@@ -22,7 +29,6 @@ namespace RetailManager.DesktopUI
 		}
 
 		// Start configuring dependecy injection using SimpleContainer.
-
 		// This mehtod gets called by Initialize.
 		protected override void Configure()
 		{
@@ -39,13 +45,13 @@ namespace RetailManager.DesktopUI
 				.Assembly
 				.GetTypes()
 				.Where(type => type.IsClass)
-				.Where(type => type.Name.EndsWith("ViewModl"))
+				.Where(type => type.Name.EndsWith("ViewModel"))
 				.ToList()
 				.ForEach(viewModelType
 				=> _container.RegisterPerRequest(
 					viewModelType, viewModelType.ToString(), viewModelType));
 		}
-
+		
 		protected override object GetInstance(Type service, string key)
 		{
 			return _container.GetInstance(service, key);
