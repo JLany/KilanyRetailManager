@@ -9,11 +9,11 @@ namespace RetailManager.Api.App_Start
 		public void Apply(SwaggerDocument swaggerDoc
 			, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
 		{
-			swaggerDoc.paths.Add("/token", new PathItem
+			swaggerDoc.paths.Add("/api/Token", new PathItem
 			{
 				post = new Operation
 				{
-					tags = new List<string> { "Auth" },
+					tags = new List<string> { "Authentication" },
 					consumes = new List<string> { "application/x-www-form-urlencoded" },
 					parameters = new List<Parameter>
 					{

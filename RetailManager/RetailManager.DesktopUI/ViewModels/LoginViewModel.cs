@@ -1,13 +1,23 @@
 ﻿using Caliburn.Micro;
+using RetailManager.DesktopUI.Helpers;
+using RetailManager.DesktopUI.Models;
+using System;
+using System.Windows;
 
 namespace RetailManager.DesktopUI.ViewModels
 {
     public class LoginViewModel : Screen
     {
-		private string _username;
+        private readonly IApiHelper _apiHelper;
+        private string _username;
 		private string _password;
 
-		public string Username
+        public LoginViewModel(IApiHelper apiHelper)
+        {
+            _apiHelper = apiHelper;
+        }
+
+        public string Username
 		{
 			get => _username;
 			set
@@ -60,9 +70,18 @@ namespace RetailManager.DesktopUI.ViewModels
 		//}
 
 		// This method works by convention.
-		public void Login()
+		public async void Login()
 		{
-
+			try
+			{
+				AuthenticationModel authentication = 
+					await _apiHelper.AuthenticateUserAsync(Username, Password);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Incorrect username or password"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 	}
 }

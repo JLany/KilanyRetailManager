@@ -38,6 +38,9 @@ namespace RetailManager.DesktopUI
 				.Singleton<IWindowManager, WindowManager>()
 				.Singleton<IEventAggregator, EventAggregator>();
 
+			_container
+				.Singleton<IApiHelper, ApiHelper>();
+
 			// Using Reflection here is OK
 			// because this method is invoked only once on application startup.
 			// So, no major performance hits.
