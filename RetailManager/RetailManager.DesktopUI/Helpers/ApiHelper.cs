@@ -34,15 +34,17 @@ namespace RetailManager.DesktopUI.Helpers
 
             using (var response = await _apiClient.PostAsync("Token", data))
             {
-                if (!response.IsSuccessStatusCode)
+                AuthenticationModel authentication;
+
+                if (!response.IsSuccessStatusCode && response.ReasonPhrase != "Bad Request")
                 {
                     throw new Exception(response.ReasonPhrase);
                 }
 
-                var authenticationModel = await response.Content
+                authentication = await response.Content
                     .ReadAsAsync<AuthenticationModel>();
 
-                return authenticationModel;
+                return authentication;
             }
         }
 

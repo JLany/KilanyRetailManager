@@ -76,10 +76,15 @@ namespace RetailManager.DesktopUI.ViewModels
 			{
 				AuthenticationModel authentication = 
 					await _apiHelper.AuthenticateUserAsync(Username, Password);
+
+				if (!authentication.IsAuthenticated)
+				{
+					MessageBox.Show(authentication.Error_Description);
+				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, "Incorrect username or password"
+				MessageBox.Show(ex.Message, "An error occurred"
                     , MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
