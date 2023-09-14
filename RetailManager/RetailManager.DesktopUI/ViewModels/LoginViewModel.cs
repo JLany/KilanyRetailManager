@@ -11,6 +11,7 @@ namespace RetailManager.DesktopUI.ViewModels
         private readonly IApiHelper _apiHelper;
         private string _username;
 		private string _password;
+        private string _errorMessage;
 
         public LoginViewModel(IApiHelper apiHelper)
         {
@@ -45,7 +46,7 @@ namespace RetailManager.DesktopUI.ViewModels
 			{
                 bool output = true;
 
-                if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+                if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password) || IsLoading)
                 {
                     output = false;
                 }
@@ -54,24 +55,53 @@ namespace RetailManager.DesktopUI.ViewModels
             }
 		}
 
-		// This method works by convention. 
-		// Can<ButtonName> is wired implicitly to the button.
-		// Binds parameters with arguments by convention too.
-		//public bool CanLogin(string username, string password)
-		//{
-		//	bool output = true;
+		public bool IsErrorVisible 
+			=> !string.IsNullOrWhiteSpace(ErrorMessage);
 
-		//	if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-		//	{
-		//		output = false;
-		//	}
-
-		//	return output;
-		//}
-
-		// This method works by convention.
-		public async void Login()
+		public string ErrorMessage
 		{
+			get => _errorMessage;
+			set
+			{
+				_errorMessage = value;
+				NotifyOfPropertyChange(() => ErrorMessage);
+				NotifyOfPropertyChange(() => IsErrorVisible);
+			}
+		}
+
+        private bool _isLoading;
+
+        // This method works by convention. 
+        // Can<ButtonName> is wired implicitly to the button.
+        // Binds parameters with arguments by convention too.
+        //public bool CanLogin(string username, string password)
+        //{
+        //	bool output = true;
+
+        //	if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        //	{
+        //		output = false;
+        //	}
+
+        //	return output;
+        //}
+
+		public bool IsLoading
+		{
+			get => _isLoading;
+			set
+			{
+				_isLoading = value;
+				NotifyOfPropertyChange(() => IsLoading);
+				NotifyOfPropertyChange(() => CanLogin);
+			}
+		}
+
+        // This method works by convention.
+        public async void Login()
+		{
+			IsLoading = true;
+
 			try
 			{
 				AuthenticationModel authentication = 
@@ -79,14 +109,18 @@ namespace RetailManager.DesktopUI.ViewModels
 
 				if (!authentication.IsAuthenticated)
 				{
-					MessageBox.Show(authentication.Error_Description);
+					ErrorMessage = authentication.Error_Description;
 				}
+				else
+					ErrorMessage = string.Empty;
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "An error occurred"
                     , MessageBoxButton.OK, MessageBoxImage.Error);
 			}
+
+			IsLoading = false;
 		}
 	}
 }

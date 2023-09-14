@@ -11,6 +11,9 @@
                     <local:Bootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
         </ResourceDictionary>
         <!-- End Caliburn.Micro config -->
         
