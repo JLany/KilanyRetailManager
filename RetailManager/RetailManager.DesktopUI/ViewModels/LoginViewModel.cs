@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using RetailManager.DesktopUI.Helpers;
-using RetailManager.DesktopUI.Models;
+using RetailManager.UI.Core.Models;
 using System;
 using System.Windows;
 

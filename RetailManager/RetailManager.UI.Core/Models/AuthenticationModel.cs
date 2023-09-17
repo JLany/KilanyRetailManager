@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetailManager.DesktopUI.Models
+namespace RetailManager.UI.Core.Models
 {
     public class AuthenticationModel
     {

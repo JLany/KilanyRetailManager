@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using RetailManager.Core.Data.Models;
 using RetailManager.Core.Data.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 
 namespace RetailManager.Api.Controllers
