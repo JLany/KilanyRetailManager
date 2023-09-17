@@ -71,5 +71,6 @@
     <Build Include="dbo\Tables\SaleDetail.sql" />
     <Build Include="dbo\Tables\Product.sql" />
     <Build Include="dbo\Tables\InventoryBatch.sql" />
+    <Build Include="dbo\Stored Procedures\spUser_GetById.sql" />
   </ItemGroup>
 </Project>
