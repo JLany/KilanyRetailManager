@@ -1,4 +1,5 @@
 ﻿using RetailManager.Core.Data.Models;
+using RetailManager.Core.Interfaces;
 using RetailManager.Core.Internal.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,13 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Data.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly IDatabaseConnector _dbConnection;
 
-        public UserRepository()
+        public UserRepository(IDatabaseConnector dbConnection)
         {
-            // TODO: Use DI.
-            _dbConnection = new DatabaseConnection();
+            _dbConnection = dbConnection;
         }
 
         public UserModel GetById(string id)

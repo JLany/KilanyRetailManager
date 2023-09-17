@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using RetailManager.Core.Data.Models;
 using RetailManager.Core.Data.Repositories;
+using RetailManager.Core.Interfaces;
 using System.Web.Http;
 
 namespace RetailManager.Api.Controllers
@@ -9,11 +10,11 @@ namespace RetailManager.Api.Controllers
     [RoutePrefix("api/User")]
     public class UsersController : ApiController
     {
-        private readonly UserRepository _userRepo;
+        private readonly IUserRepository _userRepo;
 
-        public UsersController()
+        public UsersController(IUserRepository userRepo)
         {
-            _userRepo = new UserRepository();
+            _userRepo = userRepo;
         }
 
         [HttpGet]

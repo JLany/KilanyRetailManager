@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using RetailManager.Core.Interfaces;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -6,21 +7,20 @@ using System.Data.SqlClient;
 
 namespace RetailManager.Core.Internal.DataAccess
 {
-    internal class DatabaseConnection
+    internal class DatabaseConnector : IDatabaseConnector
     {
-        private readonly string _connectionString = GetConnectionString("KilanyRetailManagementDB");
+        private readonly IConfiguration _configuration;
 
-        // TODO: Refactor this method into a config type, and register it with DI.
-        private static string GetConnectionString(string name)
+        public DatabaseConnector(IConfiguration configuration)
         {
-            return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            _configuration = configuration;
         }
 
         public IEnumerable<TResult> LoadData<TResult, TParams>(
             string storedProcedure,
             TParams parameters)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_configuration.GetConnectionString()))
             {
                 var rows = connection
                     .Query<TResult>(storedProcedure, parameters
@@ -32,7 +32,7 @@ namespace RetailManager.Core.Internal.DataAccess
 
         public void SaveData<TParams>(string storedProcedure, TParams parameters)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_configuration.GetConnectionString()))
             {
                 int rowsAffected = connection
                     .Execute(storedProcedure, parameters
