@@ -1,2 +1,6 @@
 When I encounter a new technology/topic in the project:
-- Before watching the video, I will go and learn that topic first and practice it on a small scale ISA.
+- Before watching the video, I will go and learn that topic first and 
+  practice it on a small scale ISA.
+
+When working on the project, any time, any section of it: 
+- Project Documentation is open and filled as needed.
