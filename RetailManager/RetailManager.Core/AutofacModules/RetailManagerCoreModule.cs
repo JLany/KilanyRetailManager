@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using RetailManager.Core.Data.Repositories;
 using RetailManager.Core.Interfaces;
+using RetailManager.Core.Internal.Data.Repositories;
 using RetailManager.Core.Internal.DataAccess;
 using System;
 using System.Collections.Generic;

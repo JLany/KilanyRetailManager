@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Interfaces
 {
-    public interface IDatabaseConnector
+    internal interface IDatabaseConnector
     {
         IEnumerable<TResult> LoadData<TResult, TParams>(
             string storedProcedure,

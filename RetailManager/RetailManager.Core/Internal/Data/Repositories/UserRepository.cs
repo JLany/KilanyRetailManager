@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetailManager.Core.Data.Repositories
+namespace RetailManager.Core.Internal.Data.Repositories
 {
-    public class UserRepository : IUserRepository
+    internal class UserRepository : IUserRepository
     {
         private readonly IDatabaseConnector _dbConnection;
 
@@ -21,11 +21,11 @@ namespace RetailManager.Core.Data.Repositories
         public UserModel GetById(string id)
         {
             UserModel user = _dbConnection
-                .LoadData<UserModel, object>("dbo.spUser_GetById", new { Id = id  })
+                .LoadData<UserModel, object>("dbo.spUser_GetById", new { Id = id })
                 .FirstOrDefault();
 
             return user;
-        } 
+        }
     }
 
 }

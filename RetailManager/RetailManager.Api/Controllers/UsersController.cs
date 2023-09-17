@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using RetailManager.Core.Data.Models;
-using RetailManager.Core.Data.Repositories;
 using RetailManager.Core.Interfaces;
 using System.Web.Http;
 
