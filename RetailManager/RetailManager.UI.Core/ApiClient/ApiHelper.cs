@@ -1,4 +1,4 @@
-﻿using RetailManager.DesktopUI.Models;
+﻿using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace RetailManager.DesktopUI.Helpers
+namespace RetailManager.UI.Core.ApiClient
 {
     public class ApiHelper : IApiHelper
     {

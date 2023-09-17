@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using RetailManager.DesktopUI.Helpers;
+using RetailManager.UI.Core.ApiClient;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Windows;

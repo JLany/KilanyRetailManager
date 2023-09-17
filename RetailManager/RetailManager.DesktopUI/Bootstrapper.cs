@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using RetailManager.DesktopUI.Helpers;
 using RetailManager.DesktopUI.ViewModels;
+using RetailManager.UI.Core.ApiClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Windows.Controls;
 
 namespace RetailManager.DesktopUI
 {
-	public class Bootstrapper : BootstrapperBase
+    public class Bootstrapper : BootstrapperBase
 	{
 		private SimpleContainer _container = new SimpleContainer();
 
