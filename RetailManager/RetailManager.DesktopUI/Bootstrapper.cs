@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
 using RetailManager.DesktopUI.Helpers;
 using RetailManager.DesktopUI.ViewModels;
-using RetailManager.UI.Core.ApiClient;
+using RetailManager.UI.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,12 +35,14 @@ namespace RetailManager.DesktopUI
 		{
 			_container.Instance(_container);
 
+			// WPF Services.
 			_container
 				.Singleton<IWindowManager, WindowManager>()
 				.Singleton<IEventAggregator, EventAggregator>();
 
+			// RetailManager.UI.Core Services.
 			_container
-				.Singleton<IApiHelper, ApiHelper>();
+				.AddRetailManagerUiCore();
 
 			// Using Reflection here is OK
 			// because this method is invoked only once on application startup.

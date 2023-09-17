@@ -9,13 +9,16 @@ namespace RetailManager.DesktopUI.ViewModels
     public class LoginViewModel : Screen
     {
         private readonly IApiHelper _apiHelper;
+        private readonly ILoggedInUserModel _loggedInUser;
         private string _username;
 		private string _password;
         private string _errorMessage;
+        private bool _isLoading;
 
-        public LoginViewModel(IApiHelper apiHelper)
+        public LoginViewModel(IApiHelper apiHelper, ILoggedInUserModel loggedInUser)
         {
             _apiHelper = apiHelper;
+            _loggedInUser = loggedInUser;
         }
 
         public string Username
@@ -69,7 +72,6 @@ namespace RetailManager.DesktopUI.ViewModels
 			}
 		}
 
-        private bool _isLoading;
 
         // This method works by convention. 
         // Can<ButtonName> is wired implicitly to the button.
@@ -101,6 +103,7 @@ namespace RetailManager.DesktopUI.ViewModels
         public async void Login()
 		{
 			IsLoading = true;
+			ErrorMessage = "";
 
 			try
 			{
@@ -110,9 +113,10 @@ namespace RetailManager.DesktopUI.ViewModels
 				if (!authentication.IsAuthenticated)
 				{
 					ErrorMessage = authentication.Error_Description;
+					return;
 				}
-				else
-					ErrorMessage = string.Empty;
+
+				await _apiHelper.LoadLoggedInUserInfoAsync(authentication.Access_Token);
 			}
 			catch (Exception ex)
 			{

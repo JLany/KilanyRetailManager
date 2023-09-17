@@ -16,7 +16,8 @@ namespace RetailManager.Api.Controllers
             _userRepo = new UserRepository();
         }
 
-        public IHttpActionResult GetById()
+        [HttpGet]
+        public IHttpActionResult Info()
         {
             string userId = RequestContext.Principal.Identity.GetUserId();
             UserModel user = _userRepo.GetById(userId);
