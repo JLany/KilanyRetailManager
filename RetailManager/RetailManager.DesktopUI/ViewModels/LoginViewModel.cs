@@ -123,8 +123,10 @@ namespace RetailManager.DesktopUI.ViewModels
 				MessageBox.Show(ex.Message, "An error occurred"
                     , MessageBoxButton.OK, MessageBoxImage.Error);
 			}
-
-			IsLoading = false;
+			finally
+			{
+				IsLoading = false;
+			}
 		}
 	}
 }
