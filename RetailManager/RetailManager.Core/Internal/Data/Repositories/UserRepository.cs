@@ -18,10 +18,10 @@ namespace RetailManager.Core.Internal.Data.Repositories
             _dbConnection = dbConnection;
         }
 
-        public UserModel GetById(string id)
+        public User GetById(string id)
         {
-            UserModel user = _dbConnection
-                .LoadData<UserModel, object>("dbo.spUser_GetById", new { Id = id })
+            User user = _dbConnection
+                .LoadData<User, object>("dbo.spUser_GetById", new { Id = id })
                 .FirstOrDefault();
 
             return user;

@@ -9,6 +9,6 @@ namespace RetailManager.Core.Interfaces
 {
     public interface IUserRepository
     {
-        UserModel GetById(string id);
+        User GetById(string id);
     }
 }

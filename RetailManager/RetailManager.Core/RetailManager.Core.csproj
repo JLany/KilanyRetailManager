@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacModules\RetailManagerCoreModule.cs" />
-    <Compile Include="Data\Models\UserModel.cs" />
+    <Compile Include="Data\Models\User.cs" />
     <Compile Include="Internal\Data\Repositories\UserRepository.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\IDatabaseConnector.cs" />

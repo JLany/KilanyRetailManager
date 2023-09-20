@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Data.Models
 {
-    public class UserModel
+    public class User
     {
         public string Id { get; set; }
         [Required]
