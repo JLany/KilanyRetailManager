@@ -1,0 +1,128 @@
+﻿using Caliburn.Micro;
+using RetailManager.UI.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RetailManager.DesktopUI.ViewModels
+{
+    public class SalesViewModel : Screen
+    {
+        private BindingList<ProductModel> _products = new BindingList<ProductModel>();
+        private BindingList<ProductModel> _cart = new BindingList<ProductModel>();
+
+        private string _itemQuantity;
+        private string _subTotal;
+        private string _tax;
+        private string _total;
+
+        public BindingList<ProductModel> Products
+        {
+            get => _products;
+            set
+            {
+                _products = value;
+                NotifyOfPropertyChange(() => Products);
+            }
+        }
+
+        public BindingList<ProductModel> Cart
+        {
+            get => _cart;
+            set
+            {
+                _cart = value;
+                NotifyOfPropertyChange(() => Cart);
+            }
+        }
+
+        public string ItemQuantity
+        {
+            get => _itemQuantity;
+            set
+            {
+                _itemQuantity = value;
+                NotifyOfPropertyChange(() => ItemQuantity);
+            }
+        }
+
+        public string SubTotal
+        {
+            get
+            {
+                // Calculate the actual amount.
+
+                return "$0.00";
+            }
+        }
+
+        public string Tax
+        {
+            get
+            {
+                // Calculate the actual amount.
+
+                return "$0.00";
+            }
+        }
+
+        public string Total
+        {
+            get
+            {
+                // Calculate the actual amount.
+
+                return "$0.00";
+            }
+        }
+
+        public bool CanAddToCart
+        {
+            get
+            {
+                // Make sure there is item selected.
+                // Make sure there is quantity specified.
+
+                return true;
+            }
+        }
+
+        public bool CanRemoveFromCart
+        {
+            get
+            {
+                // Make sure there is item selected.
+
+                return false;
+            }
+        }
+
+        public bool CanCheckout
+        {
+            get
+            {
+                // Make sure cart is not empty.
+
+                return true;
+            }
+        }
+
+        public void AddToCart()
+        {
+
+        }
+
+        public void RemoveFromCart()
+        {
+
+        }
+
+        public void Checkout()
+        {
+
+        }
+    }
+}
