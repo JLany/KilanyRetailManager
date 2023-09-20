@@ -20,7 +20,7 @@ namespace RetailManager.Api.Controllers
         public IHttpActionResult Info()
         {
             string userId = RequestContext.Principal.Identity.GetUserId();
-            UserModel user = _userRepo.GetById(userId);
+            User user = _userRepo.GetById(userId);
 
             if (user == null)
             {
