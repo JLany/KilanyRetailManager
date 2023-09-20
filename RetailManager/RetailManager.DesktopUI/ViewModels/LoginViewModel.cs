@@ -9,13 +9,13 @@ namespace RetailManager.DesktopUI.ViewModels
     public class LoginViewModel : Screen
     {
         private readonly IApiHelper _apiHelper;
-        private readonly ILoggedInUserModel _loggedInUser;
+        private readonly IUserPrincipal _loggedInUser;
         private string _username;
 		private string _password;
         private string _errorMessage;
         private bool _isLoading;
 
-        public LoginViewModel(IApiHelper apiHelper, ILoggedInUserModel loggedInUser)
+        public LoginViewModel(IApiHelper apiHelper, IUserPrincipal loggedInUser)
         {
             _apiHelper = apiHelper;
             _loggedInUser = loggedInUser;

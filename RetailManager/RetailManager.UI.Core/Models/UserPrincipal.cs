@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RetailManager.UI.Core.Models
 {
-    public class LoggedInUserModel : ILoggedInUserModel
+    public class UserPrincipal : IUserPrincipal
     {
         public string Id { get; set; }
         public string Token { get; set; }

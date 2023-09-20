@@ -2,7 +2,7 @@
 
 namespace RetailManager.UI.Core.Models
 {
-    public interface ILoggedInUserModel
+    public interface IUserPrincipal
     {
         DateTime CreatedDate { get; set; }
         string EmailAddress { get; set; }

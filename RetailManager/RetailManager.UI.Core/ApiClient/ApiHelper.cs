@@ -11,10 +11,10 @@ namespace RetailManager.UI.Core.ApiClient
 {
     public class ApiHelper : IApiHelper
     {
-        private readonly ILoggedInUserModel _loggedInUser;
+        private readonly IUserPrincipal _loggedInUser;
         private HttpClient _apiClient;
 
-        public ApiHelper(ILoggedInUserModel loggedInUser)
+        public ApiHelper(IUserPrincipal loggedInUser)
         {
             InitializeClient();
 
@@ -65,7 +65,7 @@ namespace RetailManager.UI.Core.ApiClient
                     throw new Exception($"{response.ReasonPhrase}, authorization token might have expired or currupted.");
                 }
 
-                var userInfo = await response.Content.ReadAsAsync<LoggedInUserModel>();
+                var userInfo = await response.Content.ReadAsAsync<UserPrincipal>();
 
                 // Fill in the model that is in the DI.
                 _loggedInUser.Id = userInfo.Id;

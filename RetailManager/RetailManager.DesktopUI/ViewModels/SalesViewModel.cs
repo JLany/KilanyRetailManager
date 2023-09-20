@@ -11,15 +11,15 @@ namespace RetailManager.DesktopUI.ViewModels
 {
     public class SalesViewModel : Screen
     {
-        private BindingList<ProductModel> _products = new BindingList<ProductModel>();
-        private BindingList<ProductModel> _cart = new BindingList<ProductModel>();
+        private BindingList<ProductViewModel> _products = new BindingList<ProductViewModel>();
+        private BindingList<ProductViewModel> _cart = new BindingList<ProductViewModel>();
 
         private string _itemQuantity;
         private string _subTotal;
         private string _tax;
         private string _total;
 
-        public BindingList<ProductModel> Products
+        public BindingList<ProductViewModel> Products
         {
             get => _products;
             set
@@ -29,7 +29,7 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public BindingList<ProductModel> Cart
+        public BindingList<ProductViewModel> Cart
         {
             get => _cart;
             set

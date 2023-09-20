@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RetailManager.UI.Core.Models
 {
-    public class ProductModel
+    public class ProductViewModel
     {
     }
 }

@@ -15,7 +15,7 @@ namespace RetailManager.UI.Core.Extensions
         {
             container
                 .Singleton<IApiHelper, ApiHelper>()
-                .Singleton<ILoggedInUserModel, LoggedInUserModel>();
+                .Singleton<IUserPrincipal, UserPrincipal>();
 
             return container;
         }
