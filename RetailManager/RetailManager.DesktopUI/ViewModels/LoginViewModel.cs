@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using RetailManager.DesktopUI.EventModels;
-using RetailManager.UI.Core.ApiClient;
+using RetailManager.UI.Core.ApiClients;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Threading;
@@ -11,18 +11,16 @@ namespace RetailManager.DesktopUI.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        private readonly IApiHelper _apiHelper;
-        private readonly IUserPrincipal _loggedInUser;
+        private readonly IAuthenticationService _authenticationService;
         private readonly IEventAggregator _events;
         private string _username;
 		private string _password;
         private string _errorMessage;
         private bool _isLoading;
 
-        public LoginViewModel(IApiHelper apiHelper, IUserPrincipal loggedInUser, IEventAggregator events)
+        public LoginViewModel(IAuthenticationService authenticationService, IEventAggregator events)
         {
-            _apiHelper = apiHelper;
-            _loggedInUser = loggedInUser;
+            _authenticationService = authenticationService;
             _events = events;
         }
 
@@ -117,7 +115,7 @@ namespace RetailManager.DesktopUI.ViewModels
 			try
 			{
 				AuthenticationModel authentication = 
-					await _apiHelper.AuthenticateUserAsync(Username, Password);
+					await _authenticationService.AuthenticateUserAsync(Username, Password);
 
 				if (!authentication.IsAuthenticated)
 				{
@@ -125,7 +123,7 @@ namespace RetailManager.DesktopUI.ViewModels
 					return;
 				}
 
-				await _apiHelper.LoadLoggedInUserInfoAsync(authentication.Access_Token);
+				await _authenticationService.LoadLoggedInUserInfoAsync(authentication.Access_Token);
 
 				await _events.PublishOnUIThreadAsync(new LogOnEvent());
 			}

@@ -1,24 +1,24 @@
 ﻿using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Net;
-using System.Net.Http;
+using System.Linq;
 using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace RetailManager.UI.Core.ApiClient
+namespace RetailManager.UI.Core.ApiClients
 {
-    public class ApiHelper : IApiHelper
+    public class AuthenticationService : IAuthenticationService
     {
+        private readonly IApiClient _apiClient;
         private readonly IUserPrincipal _loggedInUser;
-        private HttpClient _apiClient;
 
-        public ApiHelper(IUserPrincipal loggedInUser)
+        public AuthenticationService(IApiClient apiClient, IUserPrincipal _loggedInUser)
         {
-            InitializeClient();
-
-            _loggedInUser = loggedInUser;
+            _apiClient = apiClient;
+            this._loggedInUser = _loggedInUser;
         }
 
         public async Task<AuthenticationModel> AuthenticateUserAsync(string username, string password)
@@ -36,7 +36,7 @@ namespace RetailManager.UI.Core.ApiClient
                 new KeyValuePair<string, string>("password", password),
             });
 
-            using (var response = await _apiClient.PostAsync("Token", data))
+            using (var response = await _apiClient.Client.PostAsync("Token", data))
             {
                 if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.BadRequest)
                 {
@@ -51,14 +51,14 @@ namespace RetailManager.UI.Core.ApiClient
 
         public async Task LoadLoggedInUserInfoAsync(string token)
         {
-            _apiClient.DefaultRequestHeaders.Clear();
-            _apiClient.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+            _apiClient.Client.DefaultRequestHeaders.Clear();
+            _apiClient.Client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
 
-            _apiClient.DefaultRequestHeaders.Accept.Clear();
-            _apiClient.DefaultRequestHeaders.Accept
+            _apiClient.Client.DefaultRequestHeaders.Accept.Clear();
+            _apiClient.Client.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            using (var response = await _apiClient.GetAsync("Users/Info"))
+            using (var response = await _apiClient.Client.GetAsync("Users/Info"))
             {
                 if (!response.IsSuccessStatusCode)
                 {
@@ -77,20 +77,5 @@ namespace RetailManager.UI.Core.ApiClient
             }
         }
 
-        private void InitializeClient()
-        {
-            // TODO: Get configuration from DI.
-            string baseAddress = ConfigurationManager.AppSettings["ApiBaseAddress"]
-                ?? throw new InvalidOperationException("Setting 'ApiBaseAddress' was not found.");
-
-            _apiClient = new HttpClient
-            {
-                BaseAddress = new Uri(baseAddress)
-            };
-
-            _apiClient.DefaultRequestHeaders.Accept.Clear();
-            _apiClient.DefaultRequestHeaders.Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        }
     }
 }

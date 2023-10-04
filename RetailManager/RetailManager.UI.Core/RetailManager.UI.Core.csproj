@@ -59,8 +59,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiClient\ApiHelper.cs" />
-    <Compile Include="ApiClient\IApiHelper.cs" />
+    <Compile Include="ApiClients\ApiClient.cs" />
+    <Compile Include="ApiClients\AuthenticationService.cs" />
+    <Compile Include="ApiClients\IApiClient.cs" />
+    <Compile Include="ApiClients\IAuthenticationService.cs" />
     <Compile Include="Extensions\SimpleContainerExtension.cs" />
     <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\IUserPrincipal.cs" />

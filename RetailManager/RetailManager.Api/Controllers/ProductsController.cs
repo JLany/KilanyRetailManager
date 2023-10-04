@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace RetailManager.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class ProductsController : ApiController
     {
         private readonly IProductRepository _productRepository;
