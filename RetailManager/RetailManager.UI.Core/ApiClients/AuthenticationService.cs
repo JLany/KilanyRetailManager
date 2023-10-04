@@ -51,6 +51,9 @@ namespace RetailManager.UI.Core.ApiClients
 
         public async Task LoadLoggedInUserInfoAsync(string token)
         {
+            // Is clearing the request headers in a method going to cause concurrency issues???
+            // Will need to investigate.
+
             _apiClient.Client.DefaultRequestHeaders.Clear();
             _apiClient.Client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
 
@@ -62,7 +65,7 @@ namespace RetailManager.UI.Core.ApiClients
             {
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"{response.ReasonPhrase}, authorization token might have expired or currupted.");
+                    throw new Exception($"{response.ReasonPhrase}, authorization token might have been expired or currupted.");
                 }
 
                 var userInfo = await response.Content.ReadAsAsync<UserPrincipal>();
