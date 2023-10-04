@@ -30,6 +30,7 @@ namespace RetailManager.DesktopUI
 		}
 
 		// Start configuring dependecy injection using SimpleContainer.
+
 		// This mehtod gets called by Initialize.
 		protected override void Configure()
 		{

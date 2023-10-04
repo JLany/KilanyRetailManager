@@ -14,7 +14,7 @@ namespace RetailManager.DesktopUI.ViewModels
         private BindingList<ProductViewModel> _products = new BindingList<ProductViewModel>();
         private BindingList<ProductViewModel> _cart = new BindingList<ProductViewModel>();
 
-        private string _itemQuantity;
+        private int _itemQuantity;
         private string _subTotal;
         private string _tax;
         private string _total;
@@ -39,9 +39,9 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public string ItemQuantity
+        public int ItemQuantity
         {
-            get => _itemQuantity;
+            get => _itemQuantity;   
             set
             {
                 _itemQuantity = value;

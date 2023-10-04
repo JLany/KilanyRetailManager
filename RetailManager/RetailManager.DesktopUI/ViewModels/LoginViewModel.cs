@@ -1,7 +1,10 @@
 ﻿using Caliburn.Micro;
+using RetailManager.DesktopUI.EventModels;
 using RetailManager.UI.Core.ApiClient;
 using RetailManager.UI.Core.Models;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailManager.DesktopUI.ViewModels
@@ -10,16 +13,20 @@ namespace RetailManager.DesktopUI.ViewModels
     {
         private readonly IApiHelper _apiHelper;
         private readonly IUserPrincipal _loggedInUser;
+        private readonly IEventAggregator _events;
         private string _username;
 		private string _password;
         private string _errorMessage;
         private bool _isLoading;
 
-        public LoginViewModel(IApiHelper apiHelper, IUserPrincipal loggedInUser)
+        public LoginViewModel(IApiHelper apiHelper, IUserPrincipal loggedInUser, IEventAggregator events)
         {
             _apiHelper = apiHelper;
             _loggedInUser = loggedInUser;
+            _events = events;
         }
+
+        #region UI Properties
 
         public string Username
 		{
@@ -99,6 +106,8 @@ namespace RetailManager.DesktopUI.ViewModels
 			}
 		}
 
+        #endregion
+
         // This method works by convention.
         public async void Login()
 		{
@@ -117,6 +126,8 @@ namespace RetailManager.DesktopUI.ViewModels
 				}
 
 				await _apiHelper.LoadLoggedInUserInfoAsync(authentication.Access_Token);
+
+				await _events.PublishOnUIThreadAsync(new LogOnEvent());
 			}
 			catch (Exception ex)
 			{
@@ -128,5 +139,21 @@ namespace RetailManager.DesktopUI.ViewModels
 				IsLoading = false;
 			}
 		}
-	}
+
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        {
+			if (close)
+			{
+				ClearForm();
+			}
+
+            return base.OnDeactivateAsync(close, cancellationToken);
+        }
+
+        private void ClearForm()
+        {
+			Username = string.Empty;
+			Password = string.Empty;
+        }
+    }
 }

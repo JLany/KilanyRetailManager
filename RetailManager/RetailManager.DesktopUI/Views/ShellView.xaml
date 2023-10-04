@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RetailManager.DesktopUI.Views" 
         xmlns:viewmodels="clr-namespace:RetailManager.DesktopUI.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
         mc:Ignorable="d"
-        Title="ShellView" Height="450" Width="800"
+        Title="ShellView" Height="600" Width="1000"
         FontSize="18">
     
     <DockPanel>
@@ -20,7 +20,7 @@
         </Menu>
 
         <Grid>
-            <ContentControl x:Name="ActiveItem" Margin="5" />
+            <ContentControl x:Name="ActiveItem" Margin="20 5" />
         </Grid>
             
     </DockPanel>
