@@ -10,9 +10,10 @@ namespace RetailManager.Core.Interfaces
 {
     internal interface IDatabaseConnector
     {
-        IEnumerable<TResult> LoadData<TResult, TParams>(
+        Task<IEnumerable<TResult>> LoadDataAsync<TResult, TParams>(
             string storedProcedure,
             TParams parameters);
-        void SaveData<TParams>(string storedProcedure, TParams parameters);
+        Task<IEnumerable<TResult>> LoadDataAsync<TResult>(string storedProcedure);
+        Task SaveDataAsync<TParams>(string storedProcedure, TParams parameters);
     }
 }

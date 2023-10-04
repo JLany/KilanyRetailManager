@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using RetailManager.Core.Interfaces;
-using RetailManager.Core.Internal.Data.Repositories;
+using RetailManager.Core.Internal.Repositories;
 using RetailManager.Core.Internal.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,11 @@ namespace RetailManager.Core.AutofacModules
             builder
                 .RegisterType<UserRepository>()
                 .As<IUserRepository>()
+                .InstancePerRequest();
+            
+            builder
+                .RegisterType<ProductRepository>()
+                .As<IProductRepository>()
                 .InstancePerRequest();
         }
     }

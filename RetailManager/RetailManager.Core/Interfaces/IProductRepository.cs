@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Interfaces
 {
-    public interface IUserRepository
+    public interface IProductRepository
     {
-        Task<User> GetByIdAsync(string id);
+        Task<IEnumerable<Product>> GetAll();
     }
 }

@@ -7,21 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetailManager.Core.Internal.Data.Repositories
+namespace RetailManager.Core.Internal.Repositories
 {
     internal class UserRepository : IUserRepository
     {
-        private readonly IDatabaseConnector _dbConnection;
+        private readonly IDatabaseConnector _db;
 
-        public UserRepository(IDatabaseConnector dbConnection)
+        public UserRepository(IDatabaseConnector db)
         {
-            _dbConnection = dbConnection;
+            _db = db;
         }
 
-        public User GetById(string id)
+        public async Task<User> GetByIdAsync(string id)
         {
-            User user = _dbConnection
-                .LoadData<User, object>("dbo.spUser_GetById", new { Id = id })
+            User user = (await _db
+                .LoadDataAsync<User, object>("dbo.spUser_GetById", new { Id = id }))
                 .FirstOrDefault();
 
             return user;
