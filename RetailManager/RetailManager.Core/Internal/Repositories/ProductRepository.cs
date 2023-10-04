@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Internal.Repositories
 {
-    internal class ProductRepository
+    internal class ProductRepository : IProductRepository
     {
         private readonly IDatabaseConnector _db;
 

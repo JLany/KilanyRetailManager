@@ -9,6 +9,6 @@ namespace RetailManager.Core.Interfaces
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAll();
+        Task<IEnumerable<Product>> GetAllAsync();
     }
 }

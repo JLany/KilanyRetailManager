@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace RetailManager.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ProductsController : ApiController
     {
         private readonly IProductRepository _productRepository;
@@ -22,7 +22,7 @@ namespace RetailManager.Api.Controllers
 
         public async Task<IHttpActionResult> Get()
         {
-            var products = await _productRepository.GetAll();
+            var products = await _productRepository.GetAllAsync();
 
             return Ok(products);
         }
