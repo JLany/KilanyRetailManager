@@ -53,7 +53,7 @@ namespace RetailManager.UI.Core.ApiClients
         {
             AddAuthorizationRequestHeader(token);
 
-            using (var response = await _apiClient.Client.GetAsync("Users/Info"))
+            using (var response = await _apiClient.Client.GetAsync("User/Info"))
             {
                 if (!response.IsSuccessStatusCode)
                 {
