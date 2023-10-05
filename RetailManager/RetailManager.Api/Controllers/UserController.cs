@@ -18,7 +18,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IHttpActionResult> InfoAsync()
+        public async Task<IHttpActionResult> Info()
         {
             string userId = RequestContext.Principal.Identity.GetUserId();
             User user = await _userRepo.GetByIdAsync(userId);
