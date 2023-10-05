@@ -1,25 +1,42 @@
 ﻿using Caliburn.Micro;
+using RetailManager.UI.Core.ApiClients;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RetailManager.DesktopUI.ViewModels
 {
     public class SalesViewModel : Screen
     {
-        private BindingList<ProductViewModel> _products = new BindingList<ProductViewModel>();
-        private BindingList<ProductViewModel> _cart = new BindingList<ProductViewModel>();
+        private readonly IProductService _productService;
+
+        private BindingList<ListedProductViewModel> _products = new BindingList<ListedProductViewModel>();
+        private BindingList<ListedProductViewModel> _cart = new BindingList<ListedProductViewModel>();
 
         private int _itemQuantity;
         private string _subTotal;
         private string _tax;
         private string _total;
 
-        public BindingList<ProductViewModel> Products
+        public SalesViewModel(IProductService productService)
+        {
+            _productService = productService;
+        }
+
+        protected async override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            await base.OnActivateAsync(cancellationToken);
+
+            var products = await _productService.GetProductsAsync();
+            Products = new BindingList<ListedProductViewModel>(products.ToList());
+        }
+
+        public BindingList<ListedProductViewModel> Products
         {
             get => _products;
             set
@@ -29,7 +46,7 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public BindingList<ProductViewModel> Cart
+        public BindingList<ListedProductViewModel> Cart
         {
             get => _cart;
             set

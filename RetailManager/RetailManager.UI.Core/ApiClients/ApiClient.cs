@@ -19,7 +19,7 @@ namespace RetailManager.UI.Core.ApiClients
         {
             InitializeClient();
         }
-
+          
         private void InitializeClient()
         {
             // TODO: Get configuration from DI.

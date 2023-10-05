@@ -37,18 +37,31 @@
         <!-- Column 0 -->
         <TextBlock Text="Items" Grid.Row="1" Grid.Column="0" 
                    TextAlignment="Center" />
+
         <ListBox x:Name="Products" Grid.Row="2" Grid.Column="0"
-                 MinHeight="200" MinWidth="150" />
+                 MinHeight="200" MinWidth="150" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel Margin="0 0 0 10">
+                        <TextBlock Text="{Binding ProductName}" TextAlignment="Left"/>
+                        <TextBlock Text=" | " HorizontalAlignment="Right"/>
+                        <TextBlock Text="{Binding QuantityInStock}" HorizontalAlignment="Right"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <!-- Column 1 -->
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
                     Grid.Column="1" Grid.Row="2"
                     Margin="20 0 20 20" >
 
-            <TextBlock Text="Quantity"/>
+            <TextBlock Text="Quantity"/>            
             <TextBox x:Name="ItemQuantity" MinWidth="100" Margin="0 0 0 20"/>
+            
             <Button x:Name="AddToCart" Content="Add" Margin="0 0 0 20"
                     Padding="5 10"/>
+            
             <Button x:Name="RemoveFromCart" Content="Remove" 
                     Padding="5 10"/>
 
