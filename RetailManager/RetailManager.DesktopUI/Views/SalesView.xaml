@@ -39,14 +39,11 @@
                    TextAlignment="Center" />
 
         <ListBox x:Name="Products" Grid.Row="2" Grid.Column="0"
-                 MinHeight="200" MinWidth="150" >
+                 MinHeight="200" MinWidth="150"
+                 SelectedItem="{Binding Path=SelectedProduct, Mode=OneWayToSource}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel Margin="0 0 0 10">
-                        <TextBlock Text="{Binding ProductName}" TextAlignment="Left"/>
-                        <TextBlock Text=" | " HorizontalAlignment="Right"/>
-                        <TextBlock Text="{Binding QuantityInStock}" HorizontalAlignment="Right"/>
-                    </DockPanel>
+                    <TextBlock Text="{Binding DisplayName}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -71,7 +68,13 @@
         <TextBlock Text="Cart" Grid.Row="1" Grid.Column="2" 
                    TextAlignment="Center"/>
         <ListBox x:Name="Cart" Grid.Row="2" Grid.Column="2"
-                 MinHeight="200" MinWidth="150" />
+                 MinHeight="200" MinWidth="150" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayName}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <DockPanel Grid.Row="3" Grid.Column="2" >
             <TextBlock Text="Sub Total: " TextAlignment="Left"

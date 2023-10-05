@@ -13,5 +13,6 @@ namespace RetailManager.UI.Core.Models
         public string Description { get; set; }
         public decimal RetailPrice { get; set; }
         public int QuantityInStock { get; set; }
+        public string DisplayName => $"{ProductName} ({QuantityInStock})";
     }
 }

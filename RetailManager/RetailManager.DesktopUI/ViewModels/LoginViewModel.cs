@@ -22,6 +22,10 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             _authenticationService = authenticationService;
             _events = events;
+
+			//TODO: Remove this after testing.
+			Username = "test@test.test";
+			Password = "Pass@123";
         }
 
         #region UI Properties

@@ -16,12 +16,13 @@ namespace RetailManager.DesktopUI.ViewModels
         private readonly IProductService _productService;
 
         private BindingList<ListedProductViewModel> _products = new BindingList<ListedProductViewModel>();
-        private BindingList<ListedProductViewModel> _cart = new BindingList<ListedProductViewModel>();
+        private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
 
-        private int _itemQuantity;
+        private int _itemQuantity = 1;
         private string _subTotal;
         private string _tax;
         private string _total;
+        private ListedProductViewModel _selectedProduct;
 
         public SalesViewModel(IProductService productService)
         {
@@ -46,7 +47,7 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public BindingList<ListedProductViewModel> Cart
+        public BindingList<CartItemModel> Cart
         {
             get => _cart;
             set
@@ -63,6 +64,7 @@ namespace RetailManager.DesktopUI.ViewModels
             {
                 _itemQuantity = value;
                 NotifyOfPropertyChange(() => ItemQuantity);
+                NotifyOfPropertyChange(() => CanAddToCart);
             }
         }
 
@@ -71,8 +73,13 @@ namespace RetailManager.DesktopUI.ViewModels
             get
             {
                 // Calculate the actual amount.
+                var total = Cart
+                    .Aggregate(0M,
+                    (t, cartItem) => t + cartItem.Product.RetailPrice * cartItem.QuantityInCart
+                    );
 
-                return "$0.00";
+                //return $"{total:C}";
+                return total.ToString("C");
             }
         }
 
@@ -100,8 +107,15 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             get
             {
-                // Make sure there is item selected.
-                // Make sure there is quantity specified.
+                if (SelectedProduct is null)
+                {
+                    return false;
+                }
+
+                if (ItemQuantity < 1 || ItemQuantity > SelectedProduct.QuantityInStock)
+                {
+                    return false;
+                }
 
                 return true;
             }
@@ -121,15 +135,53 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             get
             {
-                // Make sure cart is not empty.
+                if (Cart.Count < 1)
+                {
+                    return false;
+                }
 
                 return true;
             }
         }
 
+        public ListedProductViewModel SelectedProduct 
+        { 
+            get => _selectedProduct;
+            set
+            {
+                _selectedProduct = value;
+                NotifyOfPropertyChange(() => SelectedProduct);
+                NotifyOfPropertyChange(() => CanAddToCart);
+            } 
+        }
+
         public void AddToCart()
         {
+            var candidateItem = Cart
+                .FirstOrDefault(cartItem => cartItem.Product.Id == SelectedProduct.Id);
 
+            if (candidateItem is null)
+            {
+                candidateItem = new CartItemModel
+                {
+                    Product = SelectedProduct
+                };
+
+                Cart.Add(candidateItem);
+            }
+
+            candidateItem.QuantityInCart += ItemQuantity;
+            SelectedProduct.QuantityInStock -= ItemQuantity;                
+            ItemQuantity = 1;
+
+            // HACK - There should be a better way to do this refreshing.
+            {
+                Cart.Remove(candidateItem);
+                Cart.Add(candidateItem);
+            }
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => CanCheckout);
         }
 
         public void RemoveFromCart()

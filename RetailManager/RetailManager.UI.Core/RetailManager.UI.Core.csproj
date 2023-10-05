@@ -67,6 +67,7 @@
     <Compile Include="ApiClients\ProductService.cs" />
     <Compile Include="Extensions\SimpleContainerExtension.cs" />
     <Compile Include="Models\AuthenticationModel.cs" />
+    <Compile Include="Models\CartItemModel.cs" />
     <Compile Include="Models\IUserPrincipal.cs" />
     <Compile Include="Models\UserPrincipal.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
