@@ -15,7 +15,7 @@ namespace RetailManager.Api.Configuration
 
         public string GetConnectionString()
         {
-            return ConfigurationManager.ConnectionStrings[Constants.ConnectionStringName].ConnectionString;
+            return GetConnectionString(Constants.ConnectionStringName);
         }
     }
 }
