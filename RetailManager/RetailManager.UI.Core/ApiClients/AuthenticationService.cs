@@ -51,15 +51,7 @@ namespace RetailManager.UI.Core.ApiClients
 
         public async Task LoadLoggedInUserInfoAsync(string token)
         {
-            // Is clearing the request headers in a method going to cause concurrency issues???
-            // Will need to investigate.
-
-            _apiClient.Client.DefaultRequestHeaders.Clear();
-            _apiClient.Client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
-
-            _apiClient.Client.DefaultRequestHeaders.Accept.Clear();
-            _apiClient.Client.DefaultRequestHeaders.Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            AddAuthorizationRequestHeader(token);
 
             using (var response = await _apiClient.Client.GetAsync("Users/Info"))
             {
@@ -80,5 +72,14 @@ namespace RetailManager.UI.Core.ApiClients
             }
         }
 
+        private void AddAuthorizationRequestHeader(string token)
+        {
+            _apiClient.Client.DefaultRequestHeaders.Clear();
+            _apiClient.Client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+
+            _apiClient.Client.DefaultRequestHeaders.Accept.Clear();
+            _apiClient.Client.DefaultRequestHeaders.Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
     }
 }
