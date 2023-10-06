@@ -61,17 +61,19 @@
   <ItemGroup>
     <Compile Include="ApiClients\ApiClient.cs" />
     <Compile Include="ApiClients\AuthenticationService.cs" />
-    <Compile Include="ApiClients\IApiClient.cs" />
-    <Compile Include="ApiClients\IAuthenticationService.cs" />
-    <Compile Include="ApiClients\IProductService.cs" />
+    <Compile Include="Interfaces\IApiClient.cs" />
+    <Compile Include="Interfaces\IAuthenticationService.cs" />
+    <Compile Include="Interfaces\IProductService.cs" />
     <Compile Include="ApiClients\ProductService.cs" />
     <Compile Include="Extensions\SimpleContainerExtension.cs" />
+    <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\CartItemModel.cs" />
     <Compile Include="Models\IUserPrincipal.cs" />
     <Compile Include="Models\UserPrincipal.cs" />
     <Compile Include="Models\ProductViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RetailManagerUIConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -1,4 +1,5 @@
-﻿using RetailManager.UI.Core.Models;
+﻿using RetailManager.UI.Core.Interfaces;
+using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,24 +8,24 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace RetailManager.UI.Core.ApiClients
+namespace RetailManager.UI.Core.Interfaces
 {
     public class ApiClient : IApiClient
     {
         private HttpClient _apiClient;
+        private readonly IConfiguration _config;
 
         public HttpClient Client => _apiClient;
 
-        public ApiClient()
+        public ApiClient(IConfiguration config)
         {
+            _config = config;
             InitializeClient();
         }
           
         private void InitializeClient()
         {
-            // TODO: Get configuration from DI.
-            string baseAddress = ConfigurationManager.AppSettings["ApiBaseAddress"]
-                ?? throw new InvalidOperationException("Setting 'ApiBaseAddress' was not found.");
+            string baseAddress = _config.GetApiBaseAddress();
 
             _apiClient = new HttpClient
             {

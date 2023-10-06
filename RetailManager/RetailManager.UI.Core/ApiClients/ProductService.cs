@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetailManager.UI.Core.ApiClients
+namespace RetailManager.UI.Core.Interfaces
 {
     public class ProductService : IProductService
     {

@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using RetailManager.DesktopUI.EventModels;
-using RetailManager.UI.Core.ApiClients;
+using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Threading;

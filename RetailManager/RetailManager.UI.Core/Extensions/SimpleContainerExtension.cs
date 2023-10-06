@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
-using RetailManager.UI.Core.ApiClients;
+using RetailManager.UI.Core.Interfaces;
+using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace RetailManager.UI.Core.Extensions
             container
                 .Singleton<IApiClient, ApiClient>()
                 .Singleton<IUserPrincipal, UserPrincipal>()
+                .Singleton<RetailManager.UI.Core.Interfaces.IConfiguration, RetailManagerUIConfiguration>()
                 .PerRequest<IAuthenticationService, AuthenticationService>()
                 .PerRequest<IProductService, ProductService>();
 

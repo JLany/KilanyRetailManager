@@ -7,8 +7,9 @@ using System.Net.Http;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using RetailManager.UI.Core.Interfaces;
 
-namespace RetailManager.UI.Core.ApiClients
+namespace RetailManager.UI.Core.Interfaces
 {
     public class AuthenticationService : IAuthenticationService
     {

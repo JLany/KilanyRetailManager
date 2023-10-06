@@ -1,7 +1,7 @@
 ﻿using RetailManager.UI.Core.Models;
 using System.Threading.Tasks;
 
-namespace RetailManager.UI.Core.ApiClients
+namespace RetailManager.UI.Core.Interfaces
 {
     public interface IAuthenticationService
     {

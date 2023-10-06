@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using RetailManager.UI.Core.ApiClients;
+using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace RetailManager.DesktopUI.ViewModels
     public class SalesViewModel : Screen
     {
         private readonly IProductService _productService;
-
+        private readonly IConfiguration _config;
         private BindingList<ListedProductViewModel> _products = new BindingList<ListedProductViewModel>();
         private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
 
@@ -24,9 +24,10 @@ namespace RetailManager.DesktopUI.ViewModels
         private string _total;
         private ListedProductViewModel _selectedProduct;
 
-        public SalesViewModel(IProductService productService)
+        public SalesViewModel(IProductService productService, IConfiguration config)
         {
             _productService = productService;
+            _config = config;
         }
 
         protected async override Task OnActivateAsync(CancellationToken cancellationToken)
@@ -68,40 +69,13 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public string SubTotal
-        {
-            get
-            {
-                // Calculate the actual amount.
-                var total = Cart
-                    .Aggregate(0M,
-                    (t, cartItem) => t + cartItem.Product.RetailPrice * cartItem.QuantityInCart
-                    );
-
+        public string SubTotal =>
                 //return $"{total:C}";
-                return total.ToString("C");
-            }
-        }
+                CalculateSubTotal().ToString("C");
 
-        public string Tax
-        {
-            get
-            {
-                // Calculate the actual amount.
+        public string Tax => CalculateTax().ToString("C");
 
-                return "$0.00";
-            }
-        }
-
-        public string Total
-        {
-            get
-            {
-                // Calculate the actual amount.
-
-                return "$0.00";
-            }
-        }
+        public string Total => (CalculateSubTotal() + CalculateTax()).ToString("C");
 
         public bool CanAddToCart
         {
@@ -181,6 +155,8 @@ namespace RetailManager.DesktopUI.ViewModels
             }
 
             NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckout);
         }
 
@@ -192,6 +168,30 @@ namespace RetailManager.DesktopUI.ViewModels
         public void Checkout()
         {
 
+        }
+
+        private decimal CalculateSubTotal()
+        {
+            return
+                Cart.Aggregate(0M,
+                (t, cartItem) => t + cartItem.Product.RetailPrice * cartItem.QuantityInCart
+                );
+        }
+
+        private decimal CalculateTax()
+        {
+            decimal taxRate = decimal.Divide(_config.GetTaxRate(), 100);
+            decimal taxAmount = 0M;
+
+            foreach (var item in Cart)
+            {
+                if (item.Product.IsTaxable)
+                {
+                    taxAmount += item.Product.RetailPrice * item.QuantityInCart * taxRate;
+                }
+            }
+
+            return taxAmount;
         }
     }
 }
