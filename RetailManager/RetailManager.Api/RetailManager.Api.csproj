@@ -256,6 +256,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310071251064_InitialRecreate.cs" />
+    <Compile Include="Migrations\202310071251064_InitialRecreate.designer.cs">
+      <DependentUpon>202310071251064_InitialRecreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -371,6 +376,11 @@
       <Project>{CBE71E6C-E5E7-4E94-BF9D-A26439DD24A0}</Project>
       <Name>RetailManager.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202310071251064_InitialRecreate.resx">
+      <DependentUpon>202310071251064_InitialRecreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

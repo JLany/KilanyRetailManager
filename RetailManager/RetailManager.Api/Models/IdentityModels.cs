@@ -21,7 +21,7 @@ namespace RetailManager.Api.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("KilanyRetailManagerIdentityDB", throwIfV1Schema: false)
         {
         }
         
