@@ -7,6 +7,6 @@
 	[PurchasePrice] MONEY NOT NULL,
 	[Tax] MONEY NOT NULL DEFAULT 0,
 
-	FOREIGN KEY ([SaleId]) REFERENCES [dbo].[Sale]([Id]),
-	FOREIGN KEY ([ProductId]) REFERENCES [dbo].[Product]([Id])
+	CONSTRAINT [FK_SaleDetail_ToSale] FOREIGN KEY ([SaleId]) REFERENCES [dbo].[Sale]([Id]),
+	CONSTRAINT [FK_SaleDetail_ToProduct] FOREIGN KEY ([ProductId]) REFERENCES [dbo].[Product]([Id])
 )
