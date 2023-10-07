@@ -174,22 +174,18 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             return
                 Cart.Aggregate(0M,
-                (t, cartItem) => t + cartItem.Product.RetailPrice * cartItem.QuantityInCart
+                (sum, item) => sum + item.Product.RetailPrice * item.QuantityInCart
                 );
         }
 
         private decimal CalculateTax()
         {
             decimal taxRate = decimal.Divide(_config.GetTaxRate(), 100);
-            decimal taxAmount = 0M;
-
-            foreach (var item in Cart)
-            {
-                if (item.Product.IsTaxable)
-                {
-                    taxAmount += item.Product.RetailPrice * item.QuantityInCart * taxRate;
-                }
-            }
+            decimal taxAmount = Cart
+                .Where(item => item.Product.IsTaxable)
+                .Aggregate(0M,
+                (sum, item) => sum + item.Product.RetailPrice * item.QuantityInCart * taxRate
+                );
 
             return taxAmount;
         }
