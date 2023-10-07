@@ -1,0 +1,5 @@
+Future Features:
+- Send cart details to the API then expect a response with a pending sale
+  object; so the frontend can display the trusted details to user, then post    
+  again to the API to confirm sale. 
+

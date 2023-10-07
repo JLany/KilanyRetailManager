@@ -61,12 +61,16 @@
   <ItemGroup>
     <Compile Include="ApiClients\ApiClient.cs" />
     <Compile Include="ApiClients\AuthenticationService.cs" />
+    <Compile Include="ApiClients\SaleService.cs" />
+    <Compile Include="Dtos\SaleDetailDto.cs" />
+    <Compile Include="Dtos\SaleDto.cs" />
     <Compile Include="Interfaces\IApiClient.cs" />
     <Compile Include="Interfaces\IAuthenticationService.cs" />
     <Compile Include="Interfaces\IProductService.cs" />
     <Compile Include="ApiClients\ProductService.cs" />
     <Compile Include="Extensions\SimpleContainerExtension.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
+    <Compile Include="Interfaces\ISaleService.cs" />
     <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\CartItemModel.cs" />
     <Compile Include="Models\IUserPrincipal.cs" />

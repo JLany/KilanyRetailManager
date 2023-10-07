@@ -7,6 +7,5 @@
 	[Tax] MONEY NOT NULL,
 	[Total] MONEY NOT NULL,
 
-	FOREIGN KEY ([CashierId]) REFERENCES [dbo].[User]([Id]), 
     CONSTRAINT [FK_Sale_ToUser] FOREIGN KEY ([CashierId]) REFERENCES [User]([Id])
 )

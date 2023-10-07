@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RetailManager.Core.Configuration;
 
 namespace RetailManager.Core.AutofacModules
 {
@@ -20,6 +21,11 @@ namespace RetailManager.Core.AutofacModules
                 .InstancePerRequest();
 
             builder
+                .RegisterType<RetailManagerApiConfiguration>()
+                .As<IConfiguration>()
+                .InstancePerRequest();
+
+            builder
                 .RegisterType<UserRepository>()
                 .As<IUserRepository>()
                 .InstancePerRequest();
@@ -27,6 +33,16 @@ namespace RetailManager.Core.AutofacModules
             builder
                 .RegisterType<ProductRepository>()
                 .As<IProductRepository>()
+                .InstancePerRequest();
+
+            builder
+                .RegisterType<SaleRepository>()
+                .As<ISaleRepository>()
+                .InstancePerRequest();
+
+            builder
+                .RegisterType<SaleDetailRepository>()
+                .As<ISaleDetailRepository>()
                 .InstancePerRequest();
         }
     }

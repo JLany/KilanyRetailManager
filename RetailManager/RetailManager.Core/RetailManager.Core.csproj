@@ -72,10 +72,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacModules\RetailManagerCoreModule.cs" />
+    <Compile Include="Configuration\Constants.cs" />
+    <Compile Include="Configuration\RetailManagerApiConfiguration.cs" />
+    <Compile Include="Data\Dtos\SaleDetailDto.cs" />
+    <Compile Include="Data\Dtos\SaleDto.cs" />
     <Compile Include="Data\Models\Product.cs" />
+    <Compile Include="Data\Models\Sale.cs" />
+    <Compile Include="Data\Models\SaleDetail.cs" />
     <Compile Include="Data\Models\User.cs" />
     <Compile Include="Interfaces\IProductRepository.cs" />
+    <Compile Include="Interfaces\ISaleDetailRepository.cs" />
+    <Compile Include="Interfaces\ISaleRepository.cs" />
     <Compile Include="Internal\Repositories\ProductRepository.cs" />
+    <Compile Include="Internal\Repositories\SaleDetailRepository.cs" />
+    <Compile Include="Internal\Repositories\SaleRepository.cs" />
     <Compile Include="Internal\Repositories\UserRepository.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\IDatabaseConnector.cs" />

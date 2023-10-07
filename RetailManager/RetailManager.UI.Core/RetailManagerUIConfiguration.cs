@@ -10,6 +10,7 @@ namespace RetailManager.UI.Core
 {
     public class RetailManagerUIConfiguration : IConfiguration
     {
+        // TODO: Move this to the API instead of the configuration, and pull it out from there.
         public decimal GetTaxRate()
         {
             var taxRate = ConfigurationManager.AppSettings["TaxRate"];

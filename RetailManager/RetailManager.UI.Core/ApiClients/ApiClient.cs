@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace RetailManager.UI.Core.Interfaces
+namespace RetailManager.UI.Core.ApiClients
 {
     public class ApiClient : IApiClient
     {
@@ -22,7 +22,7 @@ namespace RetailManager.UI.Core.Interfaces
             _config = config;
             InitializeClient();
         }
-          
+
         private void InitializeClient()
         {
             string baseAddress = _config.GetApiBaseAddress();

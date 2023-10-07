@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace RetailManager.Api.Configuration
+namespace RetailManager.Core.Configuration
 {
     public static class Constants
     {

@@ -1,6 +1,5 @@
 ﻿using RetailManager.Core.Data.Models;
 using RetailManager.Core.Interfaces;
-using RetailManager.Core.Internal.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +8,19 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Internal.Repositories
 {
-    internal class UserRepository : IUserRepository
+    internal class SaleDetailRepository : ISaleDetailRepository
     {
         private readonly IDatabaseConnector _db;
 
-        public UserRepository(IDatabaseConnector db)
+        public SaleDetailRepository(IDatabaseConnector db)
         {
             _db = db;
         }
 
-        public async Task<User> GetByIdAsync(string id)
+        public async Task AddAsync(SaleDetail saleDetail)
         {
-            User user = (await _db
-                .LoadDataAsync<User>("dbo.spUser_GetById", new { Id = id }))
-                .FirstOrDefault();
-
-            return user;
+            saleDetail.Id = await _db
+                .SaveDataAsync<int>("dbo.spSaleDetail_Insert", saleDetail);
         }
     }
 }

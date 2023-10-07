@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RetailManager.UI.Core.Interfaces;
 
-namespace RetailManager.UI.Core.Interfaces
+namespace RetailManager.UI.Core.ApiClients
 {
     public class AuthenticationService : IAuthenticationService
     {

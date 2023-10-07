@@ -10,10 +10,19 @@ namespace RetailManager.Core.Interfaces
 {
     internal interface IDatabaseConnector
     {
-        Task<IEnumerable<TResult>> LoadDataAsync<TResult, TParams>(
+        Task<IEnumerable<TResult>> LoadDataAsync<TResult>(
             string storedProcedure,
-            TParams parameters);
+            object parameters);
         Task<IEnumerable<TResult>> LoadDataAsync<TResult>(string storedProcedure);
-        Task SaveDataAsync<TParams>(string storedProcedure, TParams parameters);
+        Task SaveDataAsync(string storedProcedure, object parameters);
+
+        /// <summary>
+        /// Save to database, and return the Id.
+        /// </summary>
+        /// <typeparam name="TOutputParameter"></typeparam>
+        /// <param name="storedProcedure"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        Task<TOutputParameter> SaveDataAsync<TOutputParameter>(string storedProcedure, object parameters);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using RetailManager.UI.Core.Dtos;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
@@ -10,26 +10,25 @@ using System.Threading.Tasks;
 
 namespace RetailManager.UI.Core.ApiClients
 {
-    public class ProductService : IProductService
+    public class SaleService : ISaleService
     {
         private readonly IApiClient _apiClient;
 
-        public ProductService(IApiClient apiClient)
+        public SaleService(IApiClient apiClient)
         {
             _apiClient = apiClient;
         }
 
-        public async Task<IEnumerable<ListedProductViewModel>> GetProductsAsync()
+        public async Task PostSaleAsync(SaleDto saleDto)
         {
-            using (var response = await _apiClient.Client.GetAsync("Products/Get"))
+            using (var response = await _apiClient.Client.PostAsJsonAsync("Sales/Create", saleDto))
             {
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"{response.ReasonPhrase}, no products were found.");
+                    throw new Exception($"{response.ReasonPhrase}");
                 }
 
-                var prodcuts = await response.Content.ReadAsAsync<IEnumerable<ListedProductViewModel>>();
-                return prodcuts;
+                // TODO: Log successful call.
             }
         }
     }

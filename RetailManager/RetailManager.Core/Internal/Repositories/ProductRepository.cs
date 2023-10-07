@@ -24,5 +24,14 @@ namespace RetailManager.Core.Internal.Repositories
 
             return products;
         }
+
+        public async Task<Product> GetAsync(int id)
+        {
+            var product = (await _db
+                .LoadDataAsync<Product>("dbo.spProduct_GetById", new { Id = id }))
+                .FirstOrDefault();
+
+            return product;
+        }
     }
 }

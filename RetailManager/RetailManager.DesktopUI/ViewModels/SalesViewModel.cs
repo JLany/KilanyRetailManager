@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using RetailManager.UI.Core.Dtos;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
@@ -14,6 +15,7 @@ namespace RetailManager.DesktopUI.ViewModels
     public class SalesViewModel : Screen
     {
         private readonly IProductService _productService;
+        private readonly ISaleService _saleService;
         private readonly IConfiguration _config;
         private BindingList<ListedProductViewModel> _products = new BindingList<ListedProductViewModel>();
         private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
@@ -24,9 +26,13 @@ namespace RetailManager.DesktopUI.ViewModels
         private string _total;
         private ListedProductViewModel _selectedProduct;
 
-        public SalesViewModel(IProductService productService, IConfiguration config)
+        public SalesViewModel(
+            IProductService productService,
+            ISaleService saleService,
+            IConfiguration config)
         {
             _productService = productService;
+            _saleService = saleService;
             _config = config;
         }
 
@@ -105,18 +111,7 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public bool CanCheckout
-        {
-            get
-            {
-                if (Cart.Count < 1)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        }
+        public bool CanCheckout => Cart.Any();
 
         public ListedProductViewModel SelectedProduct 
         { 
@@ -163,11 +158,27 @@ namespace RetailManager.DesktopUI.ViewModels
         public void RemoveFromCart()
         {
 
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckout);
         }
 
-        public void Checkout()
+        public async Task Checkout()
         {
+            // ELEGANCE.
+            SaleDto saleDto = new SaleDto
+            {
+                SaleDetails = Cart.Select(
+                    item => new SaleDetailDto
+                    {
+                        ProductId = item.Product.Id,
+                        Quantity = item.QuantityInCart
+                    })
+            };
 
+            await _saleService.PostSaleAsync(saleDto);
         }
 
         private decimal CalculateSubTotal()

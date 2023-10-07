@@ -10,5 +10,6 @@ namespace RetailManager.Core.Interfaces
     {
         string GetConnectionString(string name);
         string GetConnectionString();
+        decimal GetTaxRate();
     }
 }

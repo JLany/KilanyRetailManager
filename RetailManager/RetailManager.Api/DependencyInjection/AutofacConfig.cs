@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using RetailManager.Api.Configuration;
 using System.Web.Mvc;
 using System.Web.Http;
 
@@ -22,11 +21,6 @@ namespace RetailManager.Api.DependencyInjection
             var builder = new ContainerBuilder();
 
             HttpConfiguration config = GlobalConfiguration.Configuration;
-
-            builder
-                .RegisterType<RetailManagerApiConfiguration>()
-                .As<RetailManager.Core.Interfaces.IConfiguration>()
-                .InstancePerRequest();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 

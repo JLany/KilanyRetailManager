@@ -9,3 +9,19 @@ Kilany Retail Manager Documentation
 	  Total is a column and not derived, because it is going to be used
 	  a lot in reporting. On the other hand, no Total column in table 
 	  SaleDetail.
+
+2- Depend on the API to determine the CashierId:
+	Sepecifically,
+	this is the responsiblity of the Client. It will 
+	send the token currently stored in the frontend, and the API uses
+	it to determine the Cashier.
+	(This is essentially what is happening with every request after 
+	logging in to the frontend application.)
+	But what if there are multiple stores for some company?
+	This works if we depend on the UI to send in the request the current 
+	user's token, because not more than one user can be logged in at the
+	same time from one frontend application. But they can from multiple 
+	instances of a frontend application.
+
+3- Do not depend on the frontend's calculated values, we calculate it in the 
+   API instead. 

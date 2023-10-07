@@ -17,9 +17,9 @@ namespace RetailManager.Core.Internal.DataAccess
             _configuration = configuration;
         }
 
-        public async Task<IEnumerable<TResult>> LoadDataAsync<TResult, TParams>(
+        public async Task<IEnumerable<TResult>> LoadDataAsync<TResult>(
             string storedProcedure,
-            TParams parameters)
+            object parameters)
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString()))
             {
@@ -34,16 +34,32 @@ namespace RetailManager.Core.Internal.DataAccess
         public async Task<IEnumerable<TResult>> LoadDataAsync<TResult>(
             string storedProcedure)
         {
-            return await LoadDataAsync<TResult, object>(storedProcedure, new { });
+            return await LoadDataAsync<TResult>(storedProcedure, new { });
         }
 
-        public async Task SaveDataAsync<TParams>(string storedProcedure, TParams parameters)
+        public async Task SaveDataAsync(string storedProcedure, object parameters)
         {
             using (var connection = new SqlConnection(_configuration.GetConnectionString()))
             {
                 int rowsAffected = await connection
                     .ExecuteAsync(storedProcedure, parameters
                     , commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public async Task<TOutputParameter> SaveDataAsync<TOutputParameter>(string storedProcedure, object parameters)
+        {
+            using (var connection = new SqlConnection(_configuration.GetConnectionString()))
+            {
+                DynamicParameters p = new DynamicParameters();
+                p.AddDynamicParams(parameters);
+                p.Add("@Id", null, DbType.Int32, ParameterDirection.Output);
+
+                int rowsAffected = await connection
+                    .ExecuteAsync(storedProcedure, p
+                    , commandType: CommandType.StoredProcedure);
+
+                return p.Get<TOutputParameter>(@"Id");
             }
         }
     }

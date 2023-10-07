@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using RetailManager.UI.Core.Interfaces;
+using RetailManager.UI.Core.ApiClients;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
@@ -19,7 +19,8 @@ namespace RetailManager.UI.Core.Extensions
                 .Singleton<IUserPrincipal, UserPrincipal>()
                 .Singleton<RetailManager.UI.Core.Interfaces.IConfiguration, RetailManagerUIConfiguration>()
                 .PerRequest<IAuthenticationService, AuthenticationService>()
-                .PerRequest<IProductService, ProductService>();
+                .PerRequest<IProductService, ProductService>()
+                .PerRequest<ISaleService, SaleService>();
 
             return container;
         }
