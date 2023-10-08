@@ -4,6 +4,5 @@
     {
         public ListedProductViewModel Product { get; set; }
         public int QuantityInCart { get; set; }
-        public string DisplayName => $"{Product.ProductName} ({QuantityInCart})";
     }
 }

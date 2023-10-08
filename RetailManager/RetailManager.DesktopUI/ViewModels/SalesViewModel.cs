@@ -1,4 +1,6 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
+using RetailManager.DesktopUI.Models;
 using RetailManager.UI.Core.Dtos;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
@@ -16,23 +18,23 @@ namespace RetailManager.DesktopUI.ViewModels
     {
         private readonly IProductService _productService;
         private readonly ISaleService _saleService;
+        private readonly IMapper _mapper;
         private readonly IConfiguration _config;
-        private BindingList<ListedProductViewModel> _products = new BindingList<ListedProductViewModel>();
-        private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
+        private BindingList<ListedProductDisplayModel> _products = new BindingList<ListedProductDisplayModel>();
+        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
 
         private int _itemQuantity = 1;
-        private string _subTotal;
-        private string _tax;
-        private string _total;
-        private ListedProductViewModel _selectedProduct;
+        private ListedProductDisplayModel _selectedProduct;
 
         public SalesViewModel(
             IProductService productService,
             ISaleService saleService,
+            IMapper mapper,
             IConfiguration config)
         {
             _productService = productService;
             _saleService = saleService;
+            _mapper = mapper;
             _config = config;
         }
 
@@ -41,10 +43,15 @@ namespace RetailManager.DesktopUI.ViewModels
             await base.OnActivateAsync(cancellationToken);
 
             var products = await _productService.GetProductsAsync();
-            Products = new BindingList<ListedProductViewModel>(products.ToList());
+
+            // Map from ListedProductViewModel to DisplayModel.
+            var productDisplayModels = _mapper
+                .Map<IEnumerable<ListedProductDisplayModel>>(products);
+
+            Products = new BindingList<ListedProductDisplayModel>(productDisplayModels.ToList());
         }
 
-        public BindingList<ListedProductViewModel> Products
+        public BindingList<ListedProductDisplayModel> Products
         {
             get => _products;
             set
@@ -54,7 +61,7 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public BindingList<CartItemModel> Cart
+        public BindingList<CartItemDisplayModel> Cart
         {
             get => _cart;
             set
@@ -113,7 +120,7 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public bool CanCheckout => Cart.Any();
 
-        public ListedProductViewModel SelectedProduct 
+        public ListedProductDisplayModel SelectedProduct 
         { 
             get => _selectedProduct;
             set
@@ -131,7 +138,7 @@ namespace RetailManager.DesktopUI.ViewModels
 
             if (candidateItem is null)
             {
-                candidateItem = new CartItemModel
+                candidateItem = new CartItemDisplayModel
                 {
                     Product = SelectedProduct
                 };
@@ -142,12 +149,6 @@ namespace RetailManager.DesktopUI.ViewModels
             candidateItem.QuantityInCart += ItemQuantity;
             SelectedProduct.QuantityInStock -= ItemQuantity;                
             ItemQuantity = 1;
-
-            // HACK - There should be a better way to do this refreshing.
-            {
-                Cart.Remove(candidateItem);
-                Cart.Add(candidateItem);
-            }
 
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);

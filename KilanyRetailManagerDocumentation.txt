@@ -25,3 +25,6 @@ Kilany Retail Manager Documentation
 
 3- Do not depend on the frontend's calculated values, we calculate it in the 
    API instead. 
+
+4- Libraries should not care about how you use/display the data (Models), 
+   instead, this should live in the user interface.

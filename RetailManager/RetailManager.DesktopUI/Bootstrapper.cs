@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using RetailManager.DesktopUI.Extensions;
 using RetailManager.DesktopUI.Helpers;
 using RetailManager.DesktopUI.ViewModels;
 using RetailManager.UI.Core.Extensions;
@@ -40,6 +41,8 @@ namespace RetailManager.DesktopUI
 			_container
 				.Singleton<IWindowManager, WindowManager>()
 				.Singleton<IEventAggregator, EventAggregator>();
+
+			_container.ConfigureAutoMapper();
 
 			// RetailManager.UI.Core Services.
 			_container
