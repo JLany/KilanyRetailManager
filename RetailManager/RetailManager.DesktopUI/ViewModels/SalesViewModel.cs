@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RetailManager.DesktopUI.ViewModels
 {
@@ -25,6 +26,7 @@ namespace RetailManager.DesktopUI.ViewModels
 
         private int _itemQuantity = 1;
         private ListedProductDisplayModel _selectedProduct;
+        private CartItemDisplayModel _selectedCartItem;
 
         public SalesViewModel(
             IProductService productService,
@@ -99,7 +101,7 @@ namespace RetailManager.DesktopUI.ViewModels
                     return false;
                 }
 
-                if (ItemQuantity < 1 || ItemQuantity > SelectedProduct.QuantityInStock)
+                if (SelectedProduct.QuantityInStock < ItemQuantity || ItemQuantity < 1)
                 {
                     return false;
                 }
@@ -112,9 +114,17 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             get
             {
-                // Make sure there is item selected.
+                if (SelectedCartItem is null)
+                {
+                    return false;
+                }
 
-                return false;
+                if (SelectedCartItem.QuantityInCart < 1)
+                {
+                    return false;
+                }
+
+                return true;
             }
         }
 
@@ -129,6 +139,17 @@ namespace RetailManager.DesktopUI.ViewModels
                 NotifyOfPropertyChange(() => SelectedProduct);
                 NotifyOfPropertyChange(() => CanAddToCart);
             } 
+        }
+
+        public CartItemDisplayModel SelectedCartItem
+        {
+            get => _selectedCartItem;
+            set
+            {
+                _selectedCartItem = value;
+                NotifyOfPropertyChange(() => SelectedCartItem);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
+            }
         }
 
         public void AddToCart()
@@ -158,7 +179,13 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public void RemoveFromCart()
         {
+            SelectedCartItem.Product.QuantityInStock += 1;
+            SelectedCartItem.QuantityInCart -= 1;
 
+            if (SelectedCartItem.QuantityInCart < 1)
+            {
+                Cart.Remove(SelectedCartItem);
+            }
 
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
@@ -179,7 +206,15 @@ namespace RetailManager.DesktopUI.ViewModels
                     })
             };
 
-            await _saleService.PostSaleAsync(saleDto);
+            try
+            {
+                await _saleService.PostSaleAsync(saleDto);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "An error occurred"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private decimal CalculateSubTotal()
