@@ -190,7 +190,8 @@ namespace RetailManager.DesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
-            NotifyOfPropertyChange(() => CanCheckout);
+            NotifyOfPropertyChange(() => CanCheckout); 
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
 
         public async Task Checkout()
