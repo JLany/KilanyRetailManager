@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using RetailManager.DesktopUI.EventModels;
+using RetailManager.UI.Core.Models;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,25 +9,61 @@ namespace RetailManager.DesktopUI.ViewModels
 {
 	public class ShellViewModel : Conductor<Screen>, IHandle<LogOnEvent>
 	{
-        private readonly LoginViewModel _loginVM;
-        private readonly SalesViewModel _salesVM;
         private readonly IEventAggregator _events;
+        private readonly IUserPrincipal _user;
+        private LoginViewModel _loginViewModel;
+        private SalesViewModel _salesViewModel;
 
-        public ShellViewModel(LoginViewModel loginVM, SalesViewModel salesVM, IEventAggregator events)
+        public ShellViewModel(
+            IEventAggregator events,
+            IUserPrincipal user)
         {
-            _loginVM = loginVM;
-            _salesVM = salesVM;
             _events = events;
-
+            _user = user;
             _events.SubscribeOnPublishedThread(this);
 
-            ActivateItemAsync(loginVM);
+            _loginViewModel = IoC.Get<LoginViewModel>();
+            ActivateItemAsync(_loginViewModel);
+        }
+
+        public bool IsUserLoggedIn => !string.IsNullOrWhiteSpace(_user.Token);
+
+        public async Task ExitApplicationAsync()
+        {
+            await TryCloseAsync();
+        }
+
+        public async Task LogOut()
+        {
+            ResetUserInfo();
+
+            await DeactivateItemAsync(_salesViewModel, close: true);
+
+            _loginViewModel = IoC.Get<LoginViewModel>();
+            await ActivateItemAsync(_loginViewModel);
+
+            NotifyOfPropertyChange(() => IsUserLoggedIn);
+
+            // Local function.
+            void ResetUserInfo()
+            {
+                _user.Token = null;
+                _user.EmailAddress = null;
+                _user.CreatedDate = DateTime.MinValue;
+                _user.FirstName = null;
+                _user.LastName = null;
+                _user.Id = null;
+            }
         }
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
-            await DeactivateItemAsync(_loginVM, close: true, cancellationToken);
-            await ActivateItemAsync(_salesVM, cancellationToken);
+            await DeactivateItemAsync(_loginViewModel, close: true, cancellationToken);
+
+            _salesViewModel = IoC.Get<SalesViewModel>();
+            await ActivateItemAsync(_salesViewModel, cancellationToken);
+
+            NotifyOfPropertyChange(() => IsUserLoggedIn);
         }
     }
 }
