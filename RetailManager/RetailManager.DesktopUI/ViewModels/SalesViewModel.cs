@@ -24,9 +24,10 @@ namespace RetailManager.DesktopUI.ViewModels
         private BindingList<ListedProductDisplayModel> _products = new BindingList<ListedProductDisplayModel>();
         private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
 
-        private int _itemQuantity = 1;
         private ListedProductDisplayModel _selectedProduct;
         private CartItemDisplayModel _selectedCartItem;
+        private int _itemQuantity;
+        private bool _isCheckingOut;
 
         public SalesViewModel(
             IProductService productService,
@@ -44,13 +45,19 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             await base.OnActivateAsync(cancellationToken);
 
-            var products = await _productService.GetProductsAsync();
+            await InitializeFormAsync();
+        }
 
-            // Map from ListedProductViewModel to DisplayModel.
-            var productDisplayModels = _mapper
-                .Map<IEnumerable<ListedProductDisplayModel>>(products);
+        private async Task InitializeFormAsync()
+        {
+            Products = new BindingList<ListedProductDisplayModel>((await LoadProductsAsync()).ToList());
+            Cart = new BindingList<CartItemDisplayModel>();
 
-            Products = new BindingList<ListedProductDisplayModel>(productDisplayModels.ToList());
+            ItemQuantity = 1;
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
         }
 
         public BindingList<ListedProductDisplayModel> Products
@@ -60,6 +67,7 @@ namespace RetailManager.DesktopUI.ViewModels
             {
                 _products = value;
                 NotifyOfPropertyChange(() => Products);
+                NotifyOfPropertyChange(() => CanAddToCart);
             }
         }
 
@@ -70,6 +78,7 @@ namespace RetailManager.DesktopUI.ViewModels
             {
                 _cart = value;
                 NotifyOfPropertyChange(() => Cart);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
             }
         }
 
@@ -81,6 +90,17 @@ namespace RetailManager.DesktopUI.ViewModels
                 _itemQuantity = value;
                 NotifyOfPropertyChange(() => ItemQuantity);
                 NotifyOfPropertyChange(() => CanAddToCart);
+            }
+        }
+
+        public bool IsCheckingOut
+        {
+            get => _isCheckingOut;
+            set
+            {
+                _isCheckingOut = value;
+                NotifyOfPropertyChange(() => IsCheckingOut);
+                NotifyOfPropertyChange(() => CanCheckout);
             }
         }
 
@@ -128,7 +148,7 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public bool CanCheckout => Cart.Any();
+        public bool CanCheckout => Cart.Any() && !IsCheckingOut;
 
         public ListedProductDisplayModel SelectedProduct 
         { 
@@ -196,6 +216,8 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public async Task Checkout()
         {
+            IsCheckingOut = true;
+
             // ELEGANCE.
             SaleDto saleDto = new SaleDto
             {
@@ -210,12 +232,27 @@ namespace RetailManager.DesktopUI.ViewModels
             try
             {
                 await _saleService.PostSaleAsync(saleDto);
+
+                await InitializeFormAsync();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "An error occurred"
                     , MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            finally
+            {
+                IsCheckingOut = false;
+            }
+        }
+
+        private async Task<IEnumerable<ListedProductDisplayModel>> LoadProductsAsync()
+        {
+            var products = await _productService.GetProductsAsync();
+
+            // Map from ListedProductViewModel to DisplayModel.
+            return _mapper
+                .Map<IEnumerable<ListedProductDisplayModel>>(products);
         }
 
         private decimal CalculateSubTotal()
