@@ -12,6 +12,6 @@ BEGIN
 	INSERT INTO [dbo].[SaleDetail](SaleId, ProductId, Quantity, PurchasePrice, Tax)
 	VALUES (@SaleId, @ProductId, @Quantity, @PurchasePrice, @Tax);
 
-	SELECT @Id = @@IDENTITY;
+	SELECT @Id = SCOPE_IDENTITY();
 
 END
