@@ -23,6 +23,22 @@ namespace RetailManager.UI.Core.ApiClients
             InitializeClient();
         }
 
+        public void AddAuthorizationRequestHeaders(string token)
+        {
+            _apiClient.DefaultRequestHeaders.Clear();
+            _apiClient.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+
+            _apiClient.DefaultRequestHeaders.Accept.Clear();
+            _apiClient.DefaultRequestHeaders.Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        public void ClearRequestHeaders()
+        {
+            _apiClient.DefaultRequestHeaders.Clear();
+            _apiClient.DefaultRequestHeaders.Accept.Clear();
+        }
+
         private void InitializeClient()
         {
             string baseAddress = _config.GetApiBaseAddress();

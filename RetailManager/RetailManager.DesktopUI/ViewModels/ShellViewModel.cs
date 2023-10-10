@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using RetailManager.DesktopUI.EventModels;
+using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Threading;
@@ -11,15 +12,18 @@ namespace RetailManager.DesktopUI.ViewModels
 	{
         private readonly IEventAggregator _events;
         private readonly IUserPrincipal _user;
+        private readonly IAuthenticationService _authenticationService;
         private LoginViewModel _loginViewModel;
         private SalesViewModel _salesViewModel;
 
         public ShellViewModel(
             IEventAggregator events,
-            IUserPrincipal user)
+            IUserPrincipal user,
+            IAuthenticationService authenticationService)
         {
             _events = events;
             _user = user;
+            _authenticationService = authenticationService;
             _events.SubscribeOnPublishedThread(this);
 
             _loginViewModel = IoC.Get<LoginViewModel>();
@@ -30,12 +34,14 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public async Task ExitApplicationAsync()
         {
+            await LogOut();
+
             await TryCloseAsync();
         }
 
         public async Task LogOut()
         {
-            ResetUserInfo();
+            _authenticationService.EndUserSession();
 
             await DeactivateItemAsync(_salesViewModel, close: true);
 
@@ -43,17 +49,6 @@ namespace RetailManager.DesktopUI.ViewModels
             await ActivateItemAsync(_loginViewModel);
 
             NotifyOfPropertyChange(() => IsUserLoggedIn);
-
-            // Local function.
-            void ResetUserInfo()
-            {
-                _user.Token = null;
-                _user.EmailAddress = null;
-                _user.CreatedDate = DateTime.MinValue;
-                _user.FirstName = null;
-                _user.LastName = null;
-                _user.Id = null;
-            }
         }
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)

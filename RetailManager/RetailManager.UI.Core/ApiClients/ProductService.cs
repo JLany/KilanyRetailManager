@@ -13,23 +13,39 @@ namespace RetailManager.UI.Core.ApiClients
     public class ProductService : IProductService
     {
         private readonly IApiClient _apiClient;
+        private readonly IUserPrincipal _user;
 
-        public ProductService(IApiClient apiClient)
+        public ProductService(IApiClient apiClient, IUserPrincipal user)
         {
             _apiClient = apiClient;
+            _user = user;
         }
 
         public async Task<IEnumerable<ListedProductViewModel>> GetProductsAsync()
         {
-            using (var response = await _apiClient.Client.GetAsync("Products/Get"))
-            {
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"{response.ReasonPhrase}, no products were found.");
-                }
+            _apiClient.AddAuthorizationRequestHeaders(_user.Token);
 
-                var prodcuts = await response.Content.ReadAsAsync<IEnumerable<ListedProductViewModel>>();
-                return prodcuts;
+            try
+            {
+                using (var response = await _apiClient.Client.GetAsync("Products/Get"))
+                {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new Exception($"{response.ReasonPhrase}, no products were found.");
+                    }
+
+                    var prodcuts = await response.Content.ReadAsAsync<IEnumerable<ListedProductViewModel>>();
+
+                    return prodcuts;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _apiClient.ClearRequestHeaders();
             }
         }
     }

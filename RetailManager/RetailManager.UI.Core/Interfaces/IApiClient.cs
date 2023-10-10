@@ -14,5 +14,8 @@ namespace RetailManager.UI.Core.Interfaces
         /// Internal client for connecting with the API.
         /// </summary>
         HttpClient Client { get; }
+
+        void AddAuthorizationRequestHeaders(string token);
+        void ClearRequestHeaders();
     }
 }

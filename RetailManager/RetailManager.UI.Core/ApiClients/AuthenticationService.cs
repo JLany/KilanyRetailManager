@@ -52,35 +52,48 @@ namespace RetailManager.UI.Core.ApiClients
 
         public async Task LoadLoggedInUserInfoAsync(string token)
         {
-            AddAuthorizationRequestHeader(token);
+            _apiClient.AddAuthorizationRequestHeaders(token);
 
-            using (var response = await _apiClient.Client.GetAsync("User/Info"))
+            try
             {
-                if (!response.IsSuccessStatusCode)
+                using (var response = await _apiClient.Client.GetAsync("User/Info"))
                 {
-                    throw new Exception($"{response.ReasonPhrase}, authorization token might have been expired or currupted.");
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new Exception($"{response.ReasonPhrase}, authorization token might have been expired or currupted.");
+                    }
+
+                    var userInfo = await response.Content.ReadAsAsync<UserPrincipal>();
+
+                    // Fill in the model that is in the DI.
+                    _loggedInUser.Id = userInfo.Id;
+                    _loggedInUser.Token = token;
+                    _loggedInUser.FirstName = userInfo.FirstName;
+                    _loggedInUser.LastName = userInfo.LastName;
+                    _loggedInUser.EmailAddress = userInfo.EmailAddress;
+                    _loggedInUser.CreatedDate = userInfo.CreatedDate;
                 }
-
-                var userInfo = await response.Content.ReadAsAsync<UserPrincipal>();
-
-                // Fill in the model that is in the DI.
-                _loggedInUser.Id = userInfo.Id;
-                _loggedInUser.Token = token;
-                _loggedInUser.FirstName = userInfo.FirstName;
-                _loggedInUser.LastName = userInfo.LastName;
-                _loggedInUser.EmailAddress = userInfo.EmailAddress;
-                _loggedInUser.CreatedDate = userInfo.CreatedDate;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _apiClient.ClearRequestHeaders();
             }
         }
 
-        private void AddAuthorizationRequestHeader(string token)
+        public void EndUserSession()
         {
-            _apiClient.Client.DefaultRequestHeaders.Clear();
-            _apiClient.Client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+            _loggedInUser.Token = null;
+            _loggedInUser.EmailAddress = null;
+            _loggedInUser.CreatedDate = DateTime.MinValue;
+            _loggedInUser.FirstName = null;
+            _loggedInUser.LastName = null;
+            _loggedInUser.Id = null;
 
-            _apiClient.Client.DefaultRequestHeaders.Accept.Clear();
-            _apiClient.Client.DefaultRequestHeaders.Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _apiClient.ClearRequestHeaders();
         }
     }
 }

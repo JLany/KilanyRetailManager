@@ -13,22 +13,37 @@ namespace RetailManager.UI.Core.ApiClients
     public class SaleService : ISaleService
     {
         private readonly IApiClient _apiClient;
+        private readonly IUserPrincipal _user;
 
-        public SaleService(IApiClient apiClient)
+        public SaleService(IApiClient apiClient, IUserPrincipal user)
         {
             _apiClient = apiClient;
+            _user = user;
         }
 
         public async Task PostSaleAsync(SaleDto saleDto)
         {
-            using (var response = await _apiClient.Client.PostAsJsonAsync("Sales/Create", saleDto))
-            {
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"{response.ReasonPhrase}");
-                }
+            _apiClient.AddAuthorizationRequestHeaders(_user.Token);
 
-                // TODO: Log successful call.
+            try
+            {
+                using (var response = await _apiClient.Client.PostAsJsonAsync("Sales/Create", saleDto))
+                {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new Exception($"{response.ReasonPhrase}");
+                    }
+
+                    // TODO: Log successful call.
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _apiClient.ClearRequestHeaders();
             }
         }
     }
