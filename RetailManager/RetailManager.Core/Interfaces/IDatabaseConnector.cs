@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Interfaces
 {
-    internal interface IDatabaseConnector
+    internal interface  IDatabaseConnector : IDisposable
     {
+        void BeginTransaction();
+        void CommitTransaction();
         Task<IEnumerable<TResult>> LoadDataAsync<TResult>(
             string storedProcedure,
             object parameters);
         Task<IEnumerable<TResult>> LoadDataAsync<TResult>(string storedProcedure);
+        void RollbackTransaction();
         Task SaveDataAsync(string storedProcedure, object parameters);
 
         /// <summary>

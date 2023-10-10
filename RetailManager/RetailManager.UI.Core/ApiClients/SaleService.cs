@@ -37,7 +37,7 @@ namespace RetailManager.UI.Core.ApiClients
                     // TODO: Log successful call.
                 }
             }
-            catch (Exception)
+            catch
             {
                 throw;
             }

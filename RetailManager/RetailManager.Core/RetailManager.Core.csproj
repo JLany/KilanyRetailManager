@@ -83,9 +83,11 @@
     <Compile Include="Interfaces\IProductRepository.cs" />
     <Compile Include="Interfaces\ISaleDetailRepository.cs" />
     <Compile Include="Interfaces\ISaleRepository.cs" />
+    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Internal\Repositories\ProductRepository.cs" />
     <Compile Include="Internal\Repositories\SaleDetailRepository.cs" />
     <Compile Include="Internal\Repositories\SaleRepository.cs" />
+    <Compile Include="Internal\Repositories\UnitOfWork.cs" />
     <Compile Include="Internal\Repositories\UserRepository.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\IDatabaseConnector.cs" />

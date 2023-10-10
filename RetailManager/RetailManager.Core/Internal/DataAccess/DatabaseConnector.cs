@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using RetailManager.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -10,25 +11,29 @@ namespace RetailManager.Core.Internal.DataAccess
 {
     internal class DatabaseConnector : IDatabaseConnector
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _config;
 
-        public DatabaseConnector(IConfiguration configuration)
+        private IDbConnection _connection;
+        private IDbTransaction _transaction;
+
+        public DatabaseConnector(IConfiguration config)
         {
-            _configuration = configuration;
+            _config = config;
         }
 
         public async Task<IEnumerable<TResult>> LoadDataAsync<TResult>(
             string storedProcedure,
             object parameters)
         {
-            using (var connection = new SqlConnection(_configuration.GetConnectionString()))
-            {
-                var rows = await connection
-                    .QueryAsync<TResult>(storedProcedure, parameters
-                    , commandType: CommandType.StoredProcedure);
+            BeginConnection();
 
-                return rows;
-            }
+            var rows = await _connection
+                .QueryAsync<TResult>(storedProcedure, parameters
+                , commandType: CommandType.StoredProcedure, transaction: _transaction);
+
+            EndConnection();
+
+            return rows;
         }
 
         public async Task<IEnumerable<TResult>> LoadDataAsync<TResult>(
@@ -39,28 +44,82 @@ namespace RetailManager.Core.Internal.DataAccess
 
         public async Task SaveDataAsync(string storedProcedure, object parameters)
         {
-            using (var connection = new SqlConnection(_configuration.GetConnectionString()))
-            {
-                int rowsAffected = await connection
-                    .ExecuteAsync(storedProcedure, parameters
-                    , commandType: CommandType.StoredProcedure);
-            }
+            BeginConnection();
+
+            int rowsAffected = await _connection
+                .ExecuteAsync(storedProcedure, parameters
+                , commandType: CommandType.StoredProcedure, transaction: _transaction);
+            
+            EndConnection();
         }
 
         public async Task<TOutputParameter> SaveDataAsync<TOutputParameter>(string storedProcedure, object parameters)
         {
-            using (var connection = new SqlConnection(_configuration.GetConnectionString()))
+            BeginConnection();
+
+            DynamicParameters p = new DynamicParameters();
+            p.AddDynamicParams(parameters);
+            p.Add("@Id", null, DbType.Int32, ParameterDirection.Output);
+
+            int rowsAffected = await _connection
+                .ExecuteAsync(storedProcedure, p
+                , commandType: CommandType.StoredProcedure, transaction: _transaction);
+
+            EndConnection();
+
+            return p.Get<TOutputParameter>(@"Id");
+        }
+
+        public void BeginTransaction()
+        {
+            BeginConnection();
+
+            _transaction = _connection.BeginTransaction();
+        }
+
+        public void CommitTransaction()
+        {
+            _transaction?.Commit();
+
+            _transaction?.Dispose();
+            _transaction = null;
+
+            EndConnection();
+        }
+
+        public void RollbackTransaction()
+        {
+            _transaction?.Rollback();
+
+            _transaction?.Dispose();
+            _transaction = null;
+
+            EndConnection();
+        }
+
+        private void BeginConnection()
+        {
+            if (_connection?.State == ConnectionState.Open)
             {
-                DynamicParameters p = new DynamicParameters();
-                p.AddDynamicParams(parameters);
-                p.Add("@Id", null, DbType.Int32, ParameterDirection.Output);
-
-                int rowsAffected = await connection
-                    .ExecuteAsync(storedProcedure, p
-                    , commandType: CommandType.StoredProcedure);
-
-                return p.Get<TOutputParameter>(@"Id");
+                return;
             }
+
+            _connection = new SqlConnection(_config.GetConnectionString());
+            _connection.Open();
+        }
+
+        private void EndConnection()
+        {
+            if (_transaction == null)
+            {
+                _connection?.Dispose();
+                _connection = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            CommitTransaction();
         }
     }
 }
