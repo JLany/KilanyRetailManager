@@ -119,7 +119,17 @@ namespace RetailManager.Core.Internal.DataAccess
 
         public void Dispose()
         {
-            CommitTransaction();
+            try
+            {
+                CommitTransaction();
+            }
+            catch
+            {
+                // TODO - Log this issue.
+            }
+
+            _transaction = null;
+            _connection = null;
         }
     }
 }
