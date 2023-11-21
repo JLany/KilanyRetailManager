@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RetailManager.Core.Configuration;
+using RetailManager.Core.Utility;
 
 namespace RetailManager.Core.AutofacModules
 {
@@ -53,6 +54,11 @@ namespace RetailManager.Core.AutofacModules
             builder
                 .RegisterType<UnitOfWork>()
                 .As<IUnitOfWork>()
+                .InstancePerRequest();
+
+            builder
+                .RegisterType<SalePersistence>()
+                .As<ISalePersistence>()
                 .InstancePerRequest();
         }
     }

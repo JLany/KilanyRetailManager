@@ -99,6 +99,8 @@
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\DataAccess\DatabaseConnector.cs" />
+    <Compile Include="Interfaces\ISalePersistence.cs" />
+    <Compile Include="Utility\SalePersistence.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
