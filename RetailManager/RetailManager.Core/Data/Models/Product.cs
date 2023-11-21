@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Data.Models
 {
+    /// <summary>
+    /// This model maps to the whole DB table.
+    /// </summary>
     public class Product
     {
         public int Id { get; set; }

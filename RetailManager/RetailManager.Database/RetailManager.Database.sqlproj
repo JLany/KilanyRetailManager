@@ -78,5 +78,8 @@
     <Build Include="dbo\Stored Procedures\spSaleDetail_Insert.sql" />
     <Build Include="dbo\Stored Procedures\spSale_GetById.sql" />
     <Build Include="dbo\Stored Procedures\spSale_Update.sql" />
+    <Build Include="dbo\Stored Procedures\spSale_GetSummaries.sql" />
+    <Build Include="dbo\Stored Procedures\spInventoryBatch_GetAll.sql" />
+    <Build Include="dbo\Stored Procedures\spInventoryBatch_Insert.sql" />
   </ItemGroup>
 </Project>

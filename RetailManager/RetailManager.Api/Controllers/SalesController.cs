@@ -13,6 +13,7 @@ using System.Web.Http;
 
 namespace RetailManager.Api.Controllers
 {
+    [Authorize]
     public class SalesController : ApiController
     {
         private readonly IConfiguration _config;
@@ -35,6 +36,16 @@ namespace RetailManager.Api.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [HttpGet]
+        [Route("Summaries")]
+        public async Task<IEnumerable<SaleSummary>> Summaries()
+        {
+            var summaries = await _saleRepo.GetSaleSummariesAsync();
+
+            return summaries;
+        }
+
+        [HttpPost]
         public async Task<IHttpActionResult> Create(SaleDto saleDto)
         {
             Sale sale = new Sale

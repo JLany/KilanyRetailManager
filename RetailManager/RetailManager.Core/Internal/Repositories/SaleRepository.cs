@@ -48,5 +48,13 @@ namespace RetailManager.Core.Internal.Repositories
 
             return sale;
         }
+
+        public async Task<IEnumerable<SaleSummary>> GetSaleSummariesAsync()
+        {
+            var summaries = await _db
+                .LoadDataAsync<SaleSummary>("dbo.spSale_GetSummaries");
+
+            return summaries;
+        }
     }
 }

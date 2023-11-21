@@ -44,6 +44,11 @@ namespace RetailManager.Core.AutofacModules
                 .RegisterType<SaleDetailRepository>()
                 .As<ISaleDetailRepository>()
                 .InstancePerRequest();
+            
+            builder
+                .RegisterType<InventoryBatchRepository>()
+                .As<IInventoryBatchRepository>()
+                .InstancePerRequest();
 
             builder
                 .RegisterType<UnitOfWork>()
