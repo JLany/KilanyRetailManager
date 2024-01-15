@@ -62,10 +62,17 @@
     <Compile Include="ApiClients\ApiClient.cs" />
     <Compile Include="ApiClients\AuthenticationService.cs" />
     <Compile Include="ApiClients\SaleService.cs" />
+    <Compile Include="Commands\AddToCartCommand.cs" />
+    <Compile Include="Commands\CheckoutCommand.cs" />
+    <Compile Include="Commands\RemoveFromCartCommand.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Dtos\SaleDetailDto.cs" />
     <Compile Include="Dtos\SaleDto.cs" />
     <Compile Include="Interfaces\IApiClient.cs" />
     <Compile Include="Interfaces\IAuthenticationService.cs" />
+    <Compile Include="Interfaces\ICart.cs" />
+    <Compile Include="Interfaces\ICartItemDisplayModel.cs" />
+    <Compile Include="Interfaces\IProductDisplayModel.cs" />
     <Compile Include="Interfaces\IProductService.cs" />
     <Compile Include="ApiClients\ProductService.cs" />
     <Compile Include="Extensions\SimpleContainerExtension.cs" />

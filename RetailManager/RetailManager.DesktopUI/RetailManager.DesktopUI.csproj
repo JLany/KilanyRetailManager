@@ -82,6 +82,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cart\BindingListCart.cs" />
     <Compile Include="EventModels\LogOnEvent.cs" />
     <Compile Include="Extensions\SimpleContainerExtensions.cs" />
     <Compile Include="Helpers\PasswordBoxHelper.cs" />

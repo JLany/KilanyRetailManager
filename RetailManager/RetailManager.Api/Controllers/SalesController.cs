@@ -16,12 +16,12 @@ namespace RetailManager.Api.Controllers
     [Authorize]
     public class SalesController : ApiController
     {
-        private readonly ISaleRepository _saleRepo;
+        private readonly ISaleRepository _saleRepository;
         private readonly ISalePersistence _salePersistence;
 
         public SalesController(ISaleRepository saleRepo, ISalePersistence salePersistence)
         {
-            _saleRepo = saleRepo;
+            _saleRepository = saleRepo;
             _salePersistence = salePersistence;
         }
 
@@ -29,7 +29,7 @@ namespace RetailManager.Api.Controllers
         [Route("Summaries")]
         public async Task<IEnumerable<SaleSummary>> Summaries()
         {
-            var summaries = await _saleRepo.GetSaleSummariesAsync();
+            var summaries = await _saleRepository.GetSaleSummariesAsync();
 
             return summaries;
         }

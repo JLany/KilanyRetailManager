@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace RetailManager.DesktopUI.Models
 {
-    public class CartItemDisplayModel : INotifyPropertyChanged
+    public class CartItemDisplayModel : INotifyPropertyChanged, ICartItemDisplayModel
     {
         private int _quantityInCart;
 
-        public ListedProductDisplayModel Product { get; set; }
+        public IProductDisplayModel Product { get; set; }
         public int QuantityInCart
         {
             get => _quantityInCart;

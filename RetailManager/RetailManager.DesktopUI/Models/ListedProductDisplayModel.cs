@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using RetailManager.UI.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RetailManager.DesktopUI.Models
 {
-    public class ListedProductDisplayModel : INotifyPropertyChanged
+    public class ListedProductDisplayModel : INotifyPropertyChanged, IProductDisplayModel
     {
         private int _quantityInStock;
 

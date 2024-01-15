@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
+using RetailManager.DesktopUI.Cart;
 using RetailManager.DesktopUI.Models;
+using RetailManager.UI.Core.Commands;
 using RetailManager.UI.Core.Dtos;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
@@ -22,7 +24,7 @@ namespace RetailManager.DesktopUI.ViewModels
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         private BindingList<ListedProductDisplayModel> _products = new BindingList<ListedProductDisplayModel>();
-        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
+        private BindingList<ICartItemDisplayModel> _cart = new BindingList<ICartItemDisplayModel>();
 
         private ListedProductDisplayModel _selectedProduct;
         private CartItemDisplayModel _selectedCartItem;
@@ -45,13 +47,21 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             await base.OnActivateAsync(cancellationToken);
 
-            await InitializeFormAsync();
+            try
+            {
+                await InitializeFormAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "An error occurred"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async Task InitializeFormAsync()
         {
             Products = new BindingList<ListedProductDisplayModel>((await LoadProductsAsync()).ToList());
-            Cart = new BindingList<CartItemDisplayModel>();
+            Cart = new BindingList<ICartItemDisplayModel>();
 
             ItemQuantity = 1;
 
@@ -71,7 +81,7 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
-        public BindingList<CartItemDisplayModel> Cart
+        public BindingList<ICartItemDisplayModel> Cart
         {
             get => _cart;
             set
@@ -174,21 +184,9 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public void AddToCart()
         {
-            var candidateItem = Cart
-                .FirstOrDefault(cartItem => cartItem.Product.Id == SelectedProduct.Id);
+            new AddToCartCommand(new BindingListCart(Cart), SelectedProduct, ItemQuantity)
+                .Execute();
 
-            if (candidateItem is null)
-            {
-                candidateItem = new CartItemDisplayModel
-                {
-                    Product = SelectedProduct
-                };
-
-                Cart.Add(candidateItem);
-            }
-
-            candidateItem.QuantityInCart += ItemQuantity;
-            SelectedProduct.QuantityInStock -= ItemQuantity;                
             ItemQuantity = 1;
 
             NotifyOfPropertyChange(() => SubTotal);
@@ -199,13 +197,8 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public void RemoveFromCart()
         {
-            SelectedCartItem.Product.QuantityInStock += 1;
-            SelectedCartItem.QuantityInCart -= 1;
-
-            if (SelectedCartItem.QuantityInCart < 1)
-            {
-                Cart.Remove(SelectedCartItem);
-            }
+            new RemoveFromCartCommand(new BindingListCart(Cart), SelectedCartItem)
+                .Execute();
 
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
@@ -218,22 +211,10 @@ namespace RetailManager.DesktopUI.ViewModels
         {
             IsCheckingOut = true;
 
-            // ELEGANCE.
-            SaleDto saleDto = new SaleDto
-            {
-                SaleDetails = Cart.Select(
-                    item => new SaleDetailDto
-                    {
-                        ProductId = item.Product.Id,
-                        Quantity = item.QuantityInCart
-                    })
-            };
-
             try
             {
-                await _saleService.PostSaleAsync(saleDto);
-
-                await InitializeFormAsync();
+                await new CheckoutCommand(new BindingListCart(Cart), _saleService)
+                    .Execute();
             }
             catch (Exception ex)
             {
@@ -243,6 +224,8 @@ namespace RetailManager.DesktopUI.ViewModels
             finally
             {
                 IsCheckingOut = false;
+
+                await InitializeFormAsync();
             }
         }
 
