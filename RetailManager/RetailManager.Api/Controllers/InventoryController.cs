@@ -22,6 +22,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IEnumerable<InventoryBatch>> GetAll()
         {
             var batches = await _inventoryBatchRepository.GetAllAsync();
@@ -30,6 +31,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IHttpActionResult> Create(InventoryBatchDto batchDto)
         {
             var inventoryBatch = new InventoryBatch

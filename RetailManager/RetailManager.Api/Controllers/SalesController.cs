@@ -27,6 +27,7 @@ namespace RetailManager.Api.Controllers
 
         [HttpGet]
         [Route("Summaries")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IEnumerable<SaleSummary>> Summaries()
         {
             var summaries = await _saleRepository.GetSaleSummariesAsync();
@@ -35,6 +36,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Cashier")]
         public async Task<IHttpActionResult> Create(SaleDto saleDto)
         {
             Sale sale = await _salePersistence.Create(saleDto, User.Identity.GetUserId());
