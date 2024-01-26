@@ -55,6 +55,8 @@ namespace RetailManager.DesktopUI.ViewModels
             {
                 MessageBox.Show(ex.Message, "An error occurred"
                     , MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await TryCloseAsync();
             }
         }
 
@@ -215,6 +217,8 @@ namespace RetailManager.DesktopUI.ViewModels
             {
                 await new CheckoutCommand(new BindingListCart(Cart), _saleService)
                     .Execute();
+
+                await InitializeFormAsync();
             }
             catch (Exception ex)
             {
@@ -224,8 +228,6 @@ namespace RetailManager.DesktopUI.ViewModels
             finally
             {
                 IsCheckingOut = false;
-
-                await InitializeFormAsync();
             }
         }
 

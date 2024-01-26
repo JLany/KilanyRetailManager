@@ -26,7 +26,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpGet]
-        [Route("Summaries")]
+        [Route("api/Summaries")]
         [Authorize(Roles = "Manager,Admin")]
         public async Task<IEnumerable<SaleSummary>> Summaries()
         {
