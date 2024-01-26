@@ -15,6 +15,7 @@ namespace RetailManager.DesktopUI.ViewModels
         private readonly IAuthenticationService _authenticationService;
         private LoginViewModel _loginViewModel;
         private SalesViewModel _salesViewModel;
+        private UserDashboardViewModel _userDashboardViewModel;
 
         public ShellViewModel(
             IEventAggregator events,
@@ -44,11 +45,28 @@ namespace RetailManager.DesktopUI.ViewModels
             _authenticationService.EndUserSession();
 
             await DeactivateItemAsync(_salesViewModel, close: true);
+            _salesViewModel = null;
 
             _loginViewModel = IoC.Get<LoginViewModel>();
             await ActivateItemAsync(_loginViewModel);
 
             NotifyOfPropertyChange(() => IsUserLoggedIn);
+        }
+
+        public async Task UserManagement()
+        {
+            _userDashboardViewModel = IoC.Get<UserDashboardViewModel>();
+            await ActivateItemAsync(_userDashboardViewModel);
+        }
+
+        public async Task CashRegister()
+        {
+            if (_salesViewModel == null)
+            {
+                _salesViewModel = IoC.Get<SalesViewModel>();
+            }
+
+            await ActivateItemAsync(_salesViewModel);
         }
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)

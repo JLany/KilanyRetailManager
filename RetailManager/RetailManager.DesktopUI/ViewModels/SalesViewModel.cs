@@ -23,6 +23,7 @@ namespace RetailManager.DesktopUI.ViewModels
         private readonly ISaleService _saleService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
+
         private BindingList<ListedProductDisplayModel> _products = new BindingList<ListedProductDisplayModel>();
         private BindingList<ICartItemDisplayModel> _cart = new BindingList<ICartItemDisplayModel>();
 
@@ -43,9 +44,13 @@ namespace RetailManager.DesktopUI.ViewModels
             _config = config;
         }
 
-        protected async override Task OnActivateAsync(CancellationToken cancellationToken)
+        // Here we override OnInitialize rather that on activate to support going back 
+        // to where were you left off things in the page.
+        // Use this page with caution. Make sure to ask for a new instance from IoC 
+        // when the situation holds for that.
+        protected async override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
-            await base.OnActivateAsync(cancellationToken);
+            await base.OnInitializeAsync(cancellationToken);
 
             try
             {
@@ -70,6 +75,15 @@ namespace RetailManager.DesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+        }
+
+        private async Task<IEnumerable<ListedProductDisplayModel>> LoadProductsAsync()
+        {
+            var products = await _productService.GetProductsAsync();
+
+            // Map from ListedProductViewModel to DisplayModel.
+            return _mapper
+                .Map<IEnumerable<ListedProductDisplayModel>>(products);
         }
 
         public BindingList<ListedProductDisplayModel> Products
@@ -229,15 +243,6 @@ namespace RetailManager.DesktopUI.ViewModels
             {
                 IsCheckingOut = false;
             }
-        }
-
-        private async Task<IEnumerable<ListedProductDisplayModel>> LoadProductsAsync()
-        {
-            var products = await _productService.GetProductsAsync();
-
-            // Map from ListedProductViewModel to DisplayModel.
-            return _mapper
-                .Map<IEnumerable<ListedProductDisplayModel>>(products);
         }
 
         private decimal CalculateSubTotal()

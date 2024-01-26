@@ -77,6 +77,7 @@
     <Compile Include="Data\Dtos\InventoryBatchDto.cs" />
     <Compile Include="Data\Dtos\SaleDetailDto.cs" />
     <Compile Include="Data\Dtos\SaleDto.cs" />
+    <Compile Include="Data\Models\IdentityUser.cs" />
     <Compile Include="Data\Models\InventoryBatch.cs" />
     <Compile Include="Data\Models\Product.cs" />
     <Compile Include="Data\Models\Sale.cs" />

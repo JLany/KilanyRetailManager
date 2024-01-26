@@ -14,6 +14,7 @@ using System.Web.Http;
 namespace RetailManager.Api.Controllers
 {
     [Authorize]
+    [RoutePrefix("api/Sales")]
     public class SalesController : ApiController
     {
         private readonly ISaleRepository _saleRepository;
@@ -26,7 +27,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpGet]
-        [Route("api/Summaries")]
+        [Route("Summaries")]
         [Authorize(Roles = "Manager,Admin")]
         public async Task<IEnumerable<SaleSummary>> Summaries()
         {

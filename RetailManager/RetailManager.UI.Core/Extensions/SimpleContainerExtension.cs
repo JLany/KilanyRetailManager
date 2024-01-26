@@ -18,9 +18,11 @@ namespace RetailManager.UI.Core.Extensions
                 .Singleton<IApiClient, ApiClient>()
                 .Singleton<IUserPrincipal, UserPrincipal>()
                 .Singleton<RetailManager.UI.Core.Interfaces.IConfiguration, RetailManagerUIConfiguration>()
+
                 .PerRequest<IAuthenticationService, AuthenticationService>()
                 .PerRequest<IProductService, ProductService>()
-                .PerRequest<ISaleService, SaleService>();
+                .PerRequest<ISaleService, SaleService>()
+                .PerRequest<IUserService, UserService>();
 
             return container;
         }
