@@ -22,7 +22,7 @@ namespace RetailManager.UI.Core.Extensions
                 .PerRequest<IAuthenticationService, AuthenticationService>()
                 .PerRequest<IProductService, ProductService>()
                 .PerRequest<ISaleService, SaleService>()
-                .PerRequest<IUserService, UserService>();
+                .PerRequest<IAdminService, AdminService>();
 
             return container;
         }

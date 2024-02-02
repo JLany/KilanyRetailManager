@@ -88,6 +88,7 @@
     <Compile Include="Helpers\PasswordBoxHelper.cs" />
     <Compile Include="Models\CartItemDisplayModel.cs" />
     <Compile Include="Models\ListedProductDisplayModel.cs" />
+    <Compile Include="Models\UserDisplayModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\SalesViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />

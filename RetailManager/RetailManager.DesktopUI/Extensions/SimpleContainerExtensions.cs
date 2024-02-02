@@ -18,6 +18,7 @@ namespace RetailManager.DesktopUI.Extensions
             {
                 config.CreateMap<ListedProductViewModel, ListedProductDisplayModel>();
                 config.CreateMap<CartItemModel, CartItemDisplayModel>();
+                config.CreateMap<UserModel, UserDisplayModel>();
             })
                 .CreateMapper();
 

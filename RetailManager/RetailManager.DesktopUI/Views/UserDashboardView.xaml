@@ -35,12 +35,12 @@
                Text="User Administration" FontSize="45" Margin="0 0 0 20" />
 
         <!-- Column 0 -->
-        <TextBlock Text="Items" Grid.Row="1" Grid.Column="0" 
+        <TextBlock Text="Users" Grid.Row="1" Grid.Column="0" 
                TextAlignment="Center" />
 
         <ListBox x:Name="Users" Grid.Row="2" Grid.Column="0"
-             MinHeight="200" MinWidth="150">
-            <!--SelectedItem="{Binding SelectedProduct}">-->
+                MinHeight="200" MinWidth="150"
+                SelectedItem="{Binding SelectedUser}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" >
@@ -52,6 +52,38 @@
         </ListBox>
 
         <!-- Column 1 -->
+        <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+            Orientation="Vertical" Margin="20 0 0 0" >
+            <TextBlock x:Name="SelectedUser_Email" Margin="0 0 0 10" />
+            <TextBlock Text="Current Roles" Margin="0 0 0 10" />
+            
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10" >
+                <ListBox x:Name="SelectedUser_Roles" Margin="0 0 10 0" 
+                         MinWidth="180" MinHeight="100"
+                         SelectedItem="{Binding RoleToRemove}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button x:Name="RemoveFromRole" Content="Remove From Role" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 10" >
+                <ComboBox x:Name="AvailableRoles" Margin="0 0 10 0" 
+                          MinWidth="180" MinHeight="50"
+                          SelectedItem="{Binding RoleToAdd}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button x:Name="AddToRole" Content="Add to Role" />
+            </StackPanel>
+        </StackPanel>
+        
 
         <!-- Column 2 -->
 

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace RetailManager.UI.Core.Models
 {
-    public class IdentityUserModel
+    public class UserModel
     {
         public string Id { get; set; }
         public string Email { get; set; }
-        public Dictionary<string, string> Roles { get; set; }
+        public List<RoleModel> Roles { get; set; }
 
-        public string RolesList => string.Join(", ", Roles.Values);
+        public string RolesList => string.Join(", ", Roles.Select(r => r.Name));
     }
 }

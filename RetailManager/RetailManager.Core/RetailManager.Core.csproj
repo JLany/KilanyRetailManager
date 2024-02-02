@@ -77,12 +77,14 @@
     <Compile Include="Data\Dtos\InventoryBatchDto.cs" />
     <Compile Include="Data\Dtos\SaleDetailDto.cs" />
     <Compile Include="Data\Dtos\SaleDto.cs" />
+    <Compile Include="Data\Dtos\UserRoleDto.cs" />
     <Compile Include="Data\Models\IdentityUser.cs" />
     <Compile Include="Data\Models\InventoryBatch.cs" />
     <Compile Include="Data\Models\Product.cs" />
     <Compile Include="Data\Models\Sale.cs" />
     <Compile Include="Data\Models\SaleDetail.cs" />
     <Compile Include="Data\Models\SaleSummary.cs" />
+    <Compile Include="Data\Models\SimpleRoleModel.cs" />
     <Compile Include="Data\Models\User.cs" />
     <Compile Include="Interfaces\IProductRepository.cs" />
     <Compile Include="Interfaces\ISaleDetailRepository.cs" />

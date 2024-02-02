@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using RetailManager.DesktopUI.Models;
 using RetailManager.UI.Core.ApiClients;
 using RetailManager.UI.Core.Interfaces;
@@ -11,18 +12,24 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 
 namespace RetailManager.DesktopUI.ViewModels
 {
     public class UserDashboardViewModel : Screen
     {
-        private readonly IUserService _userService;
+        private readonly IAdminService _adminService;
+        private readonly IMapper _mapper;
+        private UserDisplayModel _selectedUser;
+        private RoleModel _roleToAdd;
+        private RoleModel _roleToRemove;
+        private BindingList<UserDisplayModel> _users;
+        private IEnumerable<RoleModel> _roles;
 
-        private BindingList<IdentityUserModel> _users;
-
-        public UserDashboardViewModel(IUserService userService)
+        public UserDashboardViewModel(IAdminService adminService, IMapper mapper)
         {
-            _userService = userService;
+            _adminService = adminService;
+            _mapper = mapper;
         }
 
         protected async override Task OnActivateAsync(CancellationToken cancellationToken)
@@ -44,10 +51,18 @@ namespace RetailManager.DesktopUI.ViewModels
 
         private async Task InitializeFormAsync()
         {
-            Users = new BindingList<IdentityUserModel>((await _userService.GetUsersAsync()).ToList());
+            Users = new BindingList<UserDisplayModel>(await LoadUsers());
+            _roles = await _adminService.GetRolesAsync();
         }
 
-        public BindingList<IdentityUserModel> Users
+        private async Task<List<UserDisplayModel>> LoadUsers()
+        {
+            var users = await _adminService.GetUsersAsync();
+
+            return _mapper.Map<List<UserDisplayModel>>(users);
+        }
+
+        public BindingList<UserDisplayModel> Users
         {
             get { return _users; }
             set
@@ -55,6 +70,112 @@ namespace RetailManager.DesktopUI.ViewModels
                 _users = value;
 
                 NotifyOfPropertyChange(() => Users);
+            }
+        }
+
+        public UserDisplayModel SelectedUser
+        {
+            get => _selectedUser; 
+            set
+            {
+                _selectedUser = value;
+                NotifyOfPropertyChange(() => SelectedUser);
+                NotifyOfPropertyChange(() => AvailableRoles);
+            }
+        }
+
+        public RoleModel RoleToAdd
+        {
+            get => _roleToAdd;
+            set
+            {
+                _roleToAdd = value;
+                NotifyOfPropertyChange(() => RoleToAdd);
+                NotifyOfPropertyChange(() => CanAddToRole);
+            }
+        }
+
+        public RoleModel RoleToRemove
+        {
+            get => _roleToRemove;
+            set
+            {
+                _roleToRemove = value;
+                NotifyOfPropertyChange(() => RoleToRemove);
+                NotifyOfPropertyChange(() => CanRemoveFromRole);
+            }
+        }
+
+        public BindingList<RoleModel> AvailableRoles
+        {
+            get 
+            {            
+                if (SelectedUser == null)
+                {
+                    return new BindingList<RoleModel>();
+                }
+
+                return new BindingList<RoleModel>(
+                    _roles
+                    .Where(role => !SelectedUser.Roles.Any(userRole => userRole.Id == role.Id))
+                    .ToList());
+            }
+        }
+
+        public bool CanAddToRole => SelectedUser != null && RoleToAdd != null;
+
+        public async void AddToRole()
+        {
+            var userRole = new UserRoleModel
+            {
+                UserId = SelectedUser.Id,
+                Role = RoleToAdd.Name
+            };
+
+            try
+            {
+                await _adminService.AddUserToRoleAsync(userRole);
+
+                SelectedUser.Roles.Add(RoleToAdd);
+                var temp = SelectedUser.Roles;
+                SelectedUser.Roles = null;
+                SelectedUser.Roles = temp;
+
+                NotifyOfPropertyChange(() => SelectedUser);
+                NotifyOfPropertyChange(() => AvailableRoles);
+            }
+            catch (Exception)
+            {
+                // TODO: Handle the exception.
+                throw;
+            }
+        }
+
+        public bool CanRemoveFromRole => SelectedUser != null && RoleToRemove != null;
+
+        public async void RemoveFromRole()
+        {
+            var userRole = new UserRoleModel
+            {
+                UserId = SelectedUser.Id,
+                Role = RoleToRemove.Name
+            };
+
+            try
+            {
+                await _adminService.RemoveUserFromRoleAsync(userRole);
+
+                SelectedUser.Roles = SelectedUser.Roles
+                    .Where(role => role.Id != RoleToRemove.Id)
+                    .ToList();
+
+                NotifyOfPropertyChange(() => SelectedUser);
+                NotifyOfPropertyChange(() => AvailableRoles);
+            }
+            catch (Exception)
+            {
+                // TODO: Handle the exception.
+                throw;
             }
         }
     }

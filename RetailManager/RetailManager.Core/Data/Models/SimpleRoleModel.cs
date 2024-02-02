@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Data.Models
 {
-    public class IdentityUser
+    public class SimpleRoleModel
     {
         public string Id { get; set; }
-        public string Email { get; set; }
-
-        public IEnumerable<SimpleRoleModel> Roles { get; set; } = new List<SimpleRoleModel>();
+        public string Name { get; set; }
     }
 }
