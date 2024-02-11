@@ -1,10 +1,8 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using RetailManager.Core.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace RetailManager.Core.Internal.DataAccess
