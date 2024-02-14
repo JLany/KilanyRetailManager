@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RetailManager.Api.Data;
+using RetailManager.Core.Extensions;
 
 namespace RetailManager.Api
 {
@@ -22,6 +23,8 @@ namespace RetailManager.Api
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddRetailManagerCore();
 
             var app = builder.Build();
 

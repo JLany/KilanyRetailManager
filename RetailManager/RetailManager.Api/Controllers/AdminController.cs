@@ -74,6 +74,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpPost]
+        [Route("AddToRole")]
         public async Task<IActionResult> AddToRole(UserRoleDto userRole)
         {
             var user = await _userManager.FindByIdAsync(userRole.UserId);
@@ -83,6 +84,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpPost]
+        [Route("RemoveFromRole")]
         public async Task<IActionResult> RemoveFromRole(UserRoleDto userRole)
         {
             var user = await _userManager.FindByIdAsync(userRole.UserId);
