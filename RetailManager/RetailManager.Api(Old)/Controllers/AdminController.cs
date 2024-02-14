@@ -32,14 +32,14 @@ namespace RetailManager.Api.Controllers
         [Route("UserList")]
         public IHttpActionResult GetAllUsers()
         {
-            IEnumerable<RetailManagerUser> users;
+            IEnumerable<UserRolesViewModel> users;
 
             using (var context = new ApplicationDbContext())
             {
                 var contextRoles = context.Roles.ToList();
                 var contextUsers = UserManager.Users.ToList();
 
-                users = contextUsers.Select(u => new RetailManagerUser
+                users = contextUsers.Select(u => new UserRolesViewModel
                 {
                     Id = u.Id,
                     Email = u.Email,

@@ -1,0 +1,48 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using RetailManager.Core.Data.Dtos;
+using RetailManager.Core.Data.Models;
+using RetailManager.Core.Interfaces;
+
+namespace RetailManager.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class InventoryController : ControllerBase
+    {
+        private readonly IInventoryBatchRepository _inventoryBatchRepository;
+
+        public InventoryController(IInventoryBatchRepository inventoryBatchRepository)
+        {
+            _inventoryBatchRepository = inventoryBatchRepository;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IEnumerable<InventoryBatch>> GetAll()
+        {
+            var batches = await _inventoryBatchRepository.GetAllAsync();
+
+            return batches;
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(InventoryBatchDto batchDto)
+        {
+            var inventoryBatch = new InventoryBatch
+            {
+                ProductName = batchDto.ProductName,
+                ProductId = batchDto.ProductId,
+                Quantity = batchDto.Quantity,
+                PurchasePrice = batchDto.PurchasePrice,
+                PurchaseDate = batchDto.PurchaseDate,
+            };
+
+            await _inventoryBatchRepository.AddAsync(inventoryBatch);
+
+            return Created("", inventoryBatch);
+        }
+    }
+}
