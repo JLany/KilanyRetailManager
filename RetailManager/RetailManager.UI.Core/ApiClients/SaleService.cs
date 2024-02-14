@@ -27,7 +27,7 @@ namespace RetailManager.UI.Core.ApiClients
 
             try
             {
-                using (var response = await _apiClient.Client.PostAsJsonAsync("Sales/Create", saleDto))
+                using (var response = await _apiClient.Client.PostAsJsonAsync("Sale/Create", saleDto))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
