@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RetailManager.Core.Data.Models
 {
-    public class IdentityUser
+    public class RetailManagerUser
     {
         public string Id { get; set; }
         public string Email { get; set; }
