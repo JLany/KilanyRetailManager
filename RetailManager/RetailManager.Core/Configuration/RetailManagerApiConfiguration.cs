@@ -1,4 +1,5 @@
-﻿using RetailManager.Core.Interfaces;
+﻿using Microsoft.Extensions.Configuration;
+using RetailManager.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,11 +8,18 @@ using System.Web;
 
 namespace RetailManager.Core.Configuration
 {
-    public class RetailManagerApiConfiguration : IConfiguration
+    public class RetailManagerApiConfiguration : Interfaces.IConfiguration
     {
+        private readonly Microsoft.Extensions.Configuration.IConfiguration _config;
+
+        public RetailManagerApiConfiguration(Microsoft.Extensions.Configuration.IConfiguration config)
+        {
+            _config = config;
+        }
+
         public string GetConnectionString(string name)
         {
-            return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            return _config.GetConnectionString(name);
         }
 
         public string GetConnectionString()
@@ -21,7 +29,7 @@ namespace RetailManager.Core.Configuration
 
         public decimal GetTaxRate()
         {
-            var taxRate = ConfigurationManager.AppSettings["TaxRate"];
+            var taxRate = _config["TaxRate"];
 
             bool isValid = decimal.TryParse(taxRate, out decimal taxRateValue);
 
