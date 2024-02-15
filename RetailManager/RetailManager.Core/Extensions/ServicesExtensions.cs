@@ -3,6 +3,7 @@ using RetailManager.Core.Configuration;
 using RetailManager.Core.Interfaces;
 using RetailManager.Core.Internal.DataAccess;
 using RetailManager.Core.Internal.Repositories;
+using RetailManager.Core.Utility;
 
 namespace RetailManager.Core.Extensions
 {
@@ -18,6 +19,8 @@ namespace RetailManager.Core.Extensions
                 .AddScoped<ISaleDetailRepository, SaleDetailRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IUnitOfWork, UnitOfWork>()
+
+                .AddScoped<ISalePersistence, SalePersistence>()
 
                 .AddTransient<IConfiguration, RetailManagerApiConfiguration>();
         }
