@@ -24,7 +24,7 @@ namespace RetailManager.UI.Core.ApiClients
 
             try
             {
-                using (var response = await _apiClient.Client.GetAsync("Product/Get"))
+                using (var response = await _apiClient.Client.GetAsync("Product"))
                 {
                     if (!response.IsSuccessStatusCode)
                     {

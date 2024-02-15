@@ -8,6 +8,6 @@ namespace RetailManager.UI.Core.Dtos
 {
     public class SaleDto
     {
-        public IEnumerable<SaleDetailDto> SaleDetails { get; set; } = new HashSet<SaleDetailDto>();
+        public List<SaleDetailDto> SaleDetails { get; set; } = new List<SaleDetailDto>();
     }
 }

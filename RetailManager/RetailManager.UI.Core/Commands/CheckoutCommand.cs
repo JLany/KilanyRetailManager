@@ -29,6 +29,7 @@ namespace RetailManager.UI.Core.Commands
                         ProductId = item.Product.Id,
                         Quantity = item.QuantityInCart
                     })
+                    .ToList()
             };
 
             await _saleService.PostSaleAsync(saleDto);
