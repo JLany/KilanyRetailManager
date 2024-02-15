@@ -8,6 +8,6 @@ namespace RetailManager.Core.Data.Dtos
 {
     public class SaleDto
     {
-        public IEnumerable<SaleDetailDto> SaleDetails;
+        public List<SaleDetailDto> SaleDetails { get; set; } = new List<SaleDetailDto>();
     }
 }
