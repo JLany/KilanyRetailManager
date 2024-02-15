@@ -16,6 +16,7 @@ namespace RetailManager.Api.Controllers
             _productRepository = productRepository;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var products = await _productRepository.GetAllAsync();

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using RetailManager.Api.Data;
 using RetailManager.Api.Extensions;
 using RetailManager.Core.Extensions;
@@ -29,6 +30,15 @@ namespace RetailManager.Api
 
             builder.Services.AddRetailManagerCore();
 
+            builder.Services.AddSwaggerGen(setup =>
+            {
+                setup.SwaggerDoc("v1.0", new OpenApiInfo
+                {
+                    Title = "Kilany Retail Manager API",
+                    Version = "v1.0"
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -50,6 +60,12 @@ namespace RetailManager.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(setup =>
+            {
+                setup.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Kilany Retail Manager API");
+            });
 
             app.MapControllerRoute(
                 name: "default",
