@@ -10,13 +10,13 @@ namespace RetailManager.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class SalesController : ControllerBase
+    public class SaleController : ControllerBase
     {
         private readonly ISaleRepository _saleRepository;
         private readonly ISalePersistence _salePersistence;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public SalesController(ISaleRepository saleRepo, ISalePersistence salePersistence, UserManager<IdentityUser> userManager)
+        public SaleController(ISaleRepository saleRepo, ISalePersistence salePersistence, UserManager<IdentityUser> userManager)
         {
             _saleRepository = saleRepo;
             _salePersistence = salePersistence;

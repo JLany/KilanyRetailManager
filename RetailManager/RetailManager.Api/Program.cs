@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RetailManager.Api.Data;
+using RetailManager.Api.Extensions;
 using RetailManager.Core.Extensions;
 
 namespace RetailManager.Api
@@ -21,6 +22,8 @@ namespace RetailManager.Api
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.AddJwtBearerAuthentication();
 
             builder.Services.AddControllersWithViews();
 

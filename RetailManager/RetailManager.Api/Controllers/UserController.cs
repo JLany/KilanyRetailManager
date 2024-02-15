@@ -21,6 +21,7 @@ namespace RetailManager.Api.Controllers
         }
 
         [HttpGet]
+        [Route("Info")]
         public async Task<IActionResult> Info()
         {
             string userId = _userManager.GetUserId(User);
