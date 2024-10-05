@@ -39,7 +39,7 @@ namespace RetailManager.Api.Controllers
         {
             var userId = _userManager.GetUserId(User);
             Sale sale = await _salePersistence.Create(saleDto, userId);
-            
+
             return Created("", sale);
         }
     }

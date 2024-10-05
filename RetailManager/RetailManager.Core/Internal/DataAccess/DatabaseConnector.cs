@@ -47,7 +47,7 @@ namespace RetailManager.Core.Internal.DataAccess
             int rowsAffected = await _connection
                 .ExecuteAsync(storedProcedure, parameters
                 , commandType: CommandType.StoredProcedure, transaction: _transaction);
-            
+
             EndConnection();
         }
 

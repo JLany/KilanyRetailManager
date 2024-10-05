@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using RetailManager.Core.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -25,7 +23,7 @@ namespace RetailManager.Api.Models
             : base("KilanyRetailManagerIdentityDB", throwIfV1Schema: false)
         {
         }
-        
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

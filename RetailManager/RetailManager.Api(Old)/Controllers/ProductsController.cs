@@ -1,10 +1,4 @@
-﻿using RetailManager.Core.Data.Models;
-using RetailManager.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using RetailManager.Core.Interfaces;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -15,7 +9,7 @@ namespace RetailManager.Api.Controllers
     {
         private readonly IProductRepository _productRepository;
 
-        public ProductsController(IProductRepository productRepository) 
+        public ProductsController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }

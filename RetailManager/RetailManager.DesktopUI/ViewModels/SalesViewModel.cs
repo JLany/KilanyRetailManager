@@ -3,16 +3,8 @@ using Caliburn.Micro;
 using RetailManager.DesktopUI.Cart;
 using RetailManager.DesktopUI.Models;
 using RetailManager.UI.Core.Commands;
-using RetailManager.UI.Core.Dtos;
 using RetailManager.UI.Core.Interfaces;
-using RetailManager.UI.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailManager.DesktopUI.ViewModels
@@ -110,7 +102,7 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public int ItemQuantity
         {
-            get => _itemQuantity;   
+            get => _itemQuantity;
             set
             {
                 _itemQuantity = value;
@@ -176,15 +168,15 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public bool CanCheckout => Cart.Any() && !IsCheckingOut;
 
-        public ListedProductDisplayModel SelectedProduct 
-        { 
+        public ListedProductDisplayModel SelectedProduct
+        {
             get => _selectedProduct;
             set
             {
                 _selectedProduct = value;
                 NotifyOfPropertyChange(() => SelectedProduct);
                 NotifyOfPropertyChange(() => CanAddToCart);
-            } 
+            }
         }
 
         public CartItemDisplayModel SelectedCartItem
@@ -219,7 +211,7 @@ namespace RetailManager.DesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
-            NotifyOfPropertyChange(() => CanCheckout); 
+            NotifyOfPropertyChange(() => CanCheckout);
             NotifyOfPropertyChange(() => CanAddToCart);
         }
 

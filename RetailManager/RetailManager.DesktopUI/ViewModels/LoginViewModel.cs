@@ -2,9 +2,6 @@
 using RetailManager.DesktopUI.EventModels;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailManager.DesktopUI.ViewModels
@@ -14,7 +11,7 @@ namespace RetailManager.DesktopUI.ViewModels
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventAggregator _events;
         private string _username;
-		private string _password;
+        private string _password;
         private string _errorMessage;
         private bool _isLoading;
 
@@ -23,39 +20,39 @@ namespace RetailManager.DesktopUI.ViewModels
             _authenticationService = authenticationService;
             _events = events;
 
-			//TODO: Remove this after testing.
-			Username = "test@test.test";
-			Password = "Pass@123";
+            //TODO: Remove this after testing.
+            Username = "test@test.test";
+            Password = "Pass@123";
         }
 
         #region UI Properties
 
         public string Username
-		{
-			get => _username;
-			set
-			{
-				_username = value;
-				NotifyOfPropertyChange(() => Username);
+        {
+            get => _username;
+            set
+            {
+                _username = value;
+                NotifyOfPropertyChange(() => Username);
                 NotifyOfPropertyChange(() => CanLogin);
             }
-		}
+        }
 
-		public string Password
-		{
-			get => _password;
-			set
-			{
-				_password = value;
-				NotifyOfPropertyChange(() => Password);
-				NotifyOfPropertyChange(() => CanLogin);
-			}
-		}
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                _password = value;
+                NotifyOfPropertyChange(() => Password);
+                NotifyOfPropertyChange(() => CanLogin);
+            }
+        }
 
-		public bool CanLogin
-		{
-			get
-			{
+        public bool CanLogin
+        {
+            get
+            {
                 bool output = true;
 
                 if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password) || IsLoading)
@@ -65,21 +62,21 @@ namespace RetailManager.DesktopUI.ViewModels
 
                 return output;
             }
-		}
+        }
 
-		public bool IsErrorVisible 
-			=> !string.IsNullOrWhiteSpace(ErrorMessage);
+        public bool IsErrorVisible
+            => !string.IsNullOrWhiteSpace(ErrorMessage);
 
-		public string ErrorMessage
-		{
-			get => _errorMessage;
-			set
-			{
-				_errorMessage = value;
-				NotifyOfPropertyChange(() => ErrorMessage);
-				NotifyOfPropertyChange(() => IsErrorVisible);
-			}
-		}
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                NotifyOfPropertyChange(() => ErrorMessage);
+                NotifyOfPropertyChange(() => IsErrorVisible);
+            }
+        }
 
 
         // This method works by convention. 
@@ -97,65 +94,65 @@ namespace RetailManager.DesktopUI.ViewModels
         //	return output;
         //}
 
-		public bool IsLoading
-		{
-			get => _isLoading;
-			set
-			{
-				_isLoading = value;
-				NotifyOfPropertyChange(() => IsLoading);
-				NotifyOfPropertyChange(() => CanLogin);
-			}
-		}
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                NotifyOfPropertyChange(() => IsLoading);
+                NotifyOfPropertyChange(() => CanLogin);
+            }
+        }
 
         #endregion
 
         // This method works by convention.
         public async void Login()
-		{
-			IsLoading = true;
-			ErrorMessage = "";
+        {
+            IsLoading = true;
+            ErrorMessage = "";
 
-			try
-			{
-				AuthenticationModel authentication = 
-					await _authenticationService.AuthenticateUserAsync(Username, Password);
+            try
+            {
+                AuthenticationModel authentication =
+                    await _authenticationService.AuthenticateUserAsync(Username, Password);
 
-				if (!authentication.IsAuthenticated)
-				{
-					ErrorMessage = authentication.Error_Description;
-					return;
-				}
+                if (!authentication.IsAuthenticated)
+                {
+                    ErrorMessage = authentication.Error_Description;
+                    return;
+                }
 
-				await _authenticationService.LoadLoggedInUserInfoAsync(authentication.Access_Token);
+                await _authenticationService.LoadLoggedInUserInfoAsync(authentication.Access_Token);
 
-				await _events.PublishOnUIThreadAsync(new LogOnEvent());
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "An error occurred"
+                await _events.PublishOnUIThreadAsync(new LogOnEvent());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "An error occurred"
                     , MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-			finally
-			{
-				IsLoading = false;
-			}
-		}
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
 
         protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-			if (close)
-			{
-				ClearForm();
-			}
+            if (close)
+            {
+                ClearForm();
+            }
 
             return base.OnDeactivateAsync(close, cancellationToken);
         }
 
         private void ClearForm()
         {
-			Username = string.Empty;
-			Password = string.Empty;
+            Username = string.Empty;
+            Password = string.Empty;
         }
     }
 }

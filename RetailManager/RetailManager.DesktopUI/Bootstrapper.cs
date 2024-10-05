@@ -1,80 +1,100 @@
 ﻿using Caliburn.Micro;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using RetailManager.DesktopUI.Configuration;
 using RetailManager.DesktopUI.Extensions;
 using RetailManager.DesktopUI.Helpers;
 using RetailManager.DesktopUI.ViewModels;
 using RetailManager.UI.Core.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Serilog;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace RetailManager.DesktopUI
 {
     public class Bootstrapper : BootstrapperBase
-	{
-		private SimpleContainer _container = new SimpleContainer();
+    {
+        //private SimpleContainer _container = new SimpleContainer();
 
-		public Bootstrapper()
-		{
-			Initialize();
+        private IHost _host;
 
-			ConventionManager.AddElementConvention<PasswordBox>(
-				PasswordBoxHelper.BoundPasswordProperty,
-				"Password",
-				"PasswordChanged");
-		}
+        public Bootstrapper()
+        {
+            Initialize();
 
-		protected override void OnStartup(object sender, StartupEventArgs e)
-		{
-			DisplayRootViewForAsync<ShellViewModel>();
-		}
+            ConventionManager.AddElementConvention<PasswordBox>(
+                PasswordBoxHelper.BoundPasswordProperty,
+                "Password",
+                "PasswordChanged");
+        }
 
-		// Start configuring dependecy injection using SimpleContainer.
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewForAsync<ShellViewModel>();
+        }
 
-		// This mehtod gets called by Initialize.
-		protected override void Configure()
-		{
-			_container.Instance(_container);
+        // Start configuring dependecy injection using SimpleContainer.
 
-			// WPF Services.
-			_container
-				.Singleton<IWindowManager, WindowManager>()
-				.Singleton<IEventAggregator, EventAggregator>();
+        // This mehtod gets called by Initialize.
+        protected override void Configure()
+        {
+            var builder = Infrastructure.InitConfiguration(this.GetType().Assembly.Location);
+            Infrastructure.ConfigureLogger(builder);
 
-			_container.ConfigureAutoMapper();
+            _host = Host.CreateDefaultBuilder()
+                .ConfigureServices((HostBuilderContext context, IServiceCollection services) =>
+                {
+                    services
+                        .AddMVVM(this)
+                        .AddRetailManagerUiCore()
+                        .ConfigureAutoMapper();
+                })
+                .UseSerilog()
+                .Build();
 
-			// RetailManager.UI.Core Services.
-			_container
-				.AddRetailManagerUiCore();
+            //_container.Instance(_container);
 
-			// Using Reflection here is OK
-			// because this method is invoked only once on application startup.
-			// So, no major performance hits.
-			this.GetType()
-				.Assembly
-				.GetTypes()
-				.Where(type => type.IsClass)
-				.Where(type => type.Name.EndsWith("ViewModel"))
-				.ToList()
-				.ForEach(viewModelType
-				=> _container.RegisterPerRequest(
-					viewModelType, viewModelType.ToString(), viewModelType));
-		}
-		
-		protected override object GetInstance(Type service, string key)
-		{
-			return _container.GetInstance(service, key);
-		}
+            //// WPF Services.
+            //_container
+            //	.Singleton<IWindowManager, WindowManager>()
+            //	.Singleton<IEventAggregator, EventAggregator>();
 
-		protected override IEnumerable<object> GetAllInstances(Type service)
-		{
-			return _container.GetAllInstances(service);
-		}
+            //_container.ConfigureAutoMapper();
 
-		protected override void BuildUp(object instance)
-		{
-			_container.BuildUp(instance);
-		}
-	}
+            //// RetailManager.UI.Core Services.
+            //_container
+            //	.AddRetailManagerUiCore();
+
+            //// Using Reflection here is OK
+            //// because this method is invoked only once on application startup.
+            //// So, no major performance hits.
+            //this.GetType()
+            //	.Assembly
+            //	.GetTypes()
+            //	.Where(type => type.IsClass)
+            //	.Where(type => type.Name.EndsWith("ViewModel"))
+            //	.ToList()
+            //	.ForEach(viewModelType
+            //	=> _container.RegisterPerRequest(
+            //		viewModelType, viewModelType.ToString(), viewModelType));
+        }
+
+        protected override object GetInstance(Type service, string key)
+        {
+            //return _container.GetInstance(service, key);
+            return _host.Services.GetService(service)!;
+        }
+
+        protected override IEnumerable<object> GetAllInstances(Type service)
+        {
+            //return _container.GetAllInstances(service);
+            return _host.Services.GetServices(service)!;
+        }
+
+        //protected override void BuildUp(object instance)
+        //{
+        //	_container.BuildUp(instance);
+        //}
+    }
 }

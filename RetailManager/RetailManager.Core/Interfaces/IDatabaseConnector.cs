@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RetailManager.Core.Interfaces
 {
-    internal interface  IDatabaseConnector : IDisposable
+    internal interface IDatabaseConnector : IDisposable
     {
         void BeginTransaction();
         void CommitTransaction();

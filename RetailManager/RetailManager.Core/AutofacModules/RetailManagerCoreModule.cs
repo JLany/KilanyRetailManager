@@ -1,13 +1,8 @@
 ﻿using Autofac;
-using RetailManager.Core.Interfaces;
-using RetailManager.Core.Internal.Repositories;
-using RetailManager.Core.Internal.DataAccess;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RetailManager.Core.Configuration;
+using RetailManager.Core.Interfaces;
+using RetailManager.Core.Internal.DataAccess;
+using RetailManager.Core.Internal.Repositories;
 using RetailManager.Core.Utility;
 
 namespace RetailManager.Core.AutofacModules
@@ -30,7 +25,7 @@ namespace RetailManager.Core.AutofacModules
                 .RegisterType<UserRepository>()
                 .As<IUserRepository>()
                 .InstancePerRequest();
-            
+
             builder
                 .RegisterType<ProductRepository>()
                 .As<IProductRepository>()
@@ -45,7 +40,7 @@ namespace RetailManager.Core.AutofacModules
                 .RegisterType<SaleDetailRepository>()
                 .As<ISaleDetailRepository>()
                 .InstancePerRequest();
-            
+
             builder
                 .RegisterType<InventoryBatchRepository>()
                 .As<IInventoryBatchRepository>()

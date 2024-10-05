@@ -1,8 +1,8 @@
+using RetailManager.Api.Areas.HelpPage.ModelDescriptions;
+using RetailManager.Api.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using RetailManager.Api.Areas.HelpPage.ModelDescriptions;
-using RetailManager.Api.Areas.HelpPage.Models;
 
 namespace RetailManager.Api.Areas.HelpPage.Controllers
 {

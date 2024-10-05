@@ -14,7 +14,7 @@ namespace RetailManager.Api.Utils.Jwt
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public JwtTokenGenerator(UserManager<IdentityUser> userManager, ApplicationDbContext context) 
+        public JwtTokenGenerator(UserManager<IdentityUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _context = context;

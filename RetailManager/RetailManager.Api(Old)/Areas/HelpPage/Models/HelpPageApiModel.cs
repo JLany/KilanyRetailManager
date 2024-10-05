@@ -1,8 +1,8 @@
+using RetailManager.Api.Areas.HelpPage.ModelDescriptions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
-using RetailManager.Api.Areas.HelpPage.ModelDescriptions;
 
 namespace RetailManager.Api.Areas.HelpPage.Models
 {

@@ -11,7 +11,7 @@ namespace RetailManager.Api.Controllers
     {
         private readonly IProductRepository _productRepository;
 
-        public ProductController(IProductRepository productRepository) 
+        public ProductController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }

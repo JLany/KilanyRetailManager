@@ -23,7 +23,7 @@ namespace RetailManager.Core.Internal.Repositories
 
         public async Task AddAsync(InventoryBatch inventoryBatch)
         {
-            inventoryBatch.Id = 
+            inventoryBatch.Id =
                 await _db.SaveDataAsync<int>("dbo.spInventoryBatch_Insert", inventoryBatch);
         }
     }

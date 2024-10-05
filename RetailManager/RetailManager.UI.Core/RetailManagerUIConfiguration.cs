@@ -1,19 +1,21 @@
-﻿using RetailManager.UI.Core.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Configuration;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RetailManager.UI.Core
 {
-    public class RetailManagerUIConfiguration : IConfiguration
+    public class RetailManagerUIConfiguration : Interfaces.IConfiguration
     {
+        private readonly IConfiguration _config;
+
+        public RetailManagerUIConfiguration(IConfiguration config)
+        {
+            _config = config;
+        }
+
         // TODO: Move this to the API instead of the configuration, and pull it out from there.
         public decimal GetTaxRate()
         {
-            var taxRate = ConfigurationManager.AppSettings["TaxRate"];
+            var taxRate = _config["TaxRate"];
 
             bool isValid = decimal.TryParse(taxRate, out decimal taxRateValue);
 
@@ -27,7 +29,7 @@ namespace RetailManager.UI.Core
 
         public string GetApiBaseAddress()
         {
-            string baseAddress = ConfigurationManager.AppSettings["ApiBaseAddress"]
+            string baseAddress = _config["ApiBaseAddress"]
                ?? throw new ConfigurationErrorsException("Setting 'ApiBaseAddress' was not found.");
 
             return baseAddress;

@@ -1,10 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using RetailManager.Core.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Web;
 
 namespace RetailManager.Core.Configuration
 {

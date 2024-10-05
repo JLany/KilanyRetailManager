@@ -1,15 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
 using RetailManager.Core.AutofacModules;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using Microsoft.Configuration.ConfigurationBuilders;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Web;
-using System.Web.Mvc;
 using System.Web.Http;
 
 namespace RetailManager.Api.DependencyInjection

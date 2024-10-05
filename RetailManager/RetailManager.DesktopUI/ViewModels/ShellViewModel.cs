@@ -2,14 +2,11 @@
 using RetailManager.DesktopUI.EventModels;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace RetailManager.DesktopUI.ViewModels
 {
-	public class ShellViewModel : Conductor<Screen>, IHandle<LogOnEvent>
-	{
+    public class ShellViewModel : Conductor<Screen>, IHandle<LogOnEvent>
+    {
         private readonly IEventAggregator _events;
         private readonly IUserPrincipal _user;
         private readonly IAuthenticationService _authenticationService;

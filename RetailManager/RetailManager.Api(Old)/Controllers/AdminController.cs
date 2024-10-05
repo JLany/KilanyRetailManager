@@ -3,10 +3,8 @@ using Microsoft.AspNet.Identity.Owin;
 using RetailManager.Api.Models;
 using RetailManager.Core.Data.Dtos;
 using RetailManager.Core.Data.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
@@ -45,10 +43,10 @@ namespace RetailManager.Api.Controllers
                     Email = u.Email,
                     Roles = contextRoles
                         .Where(role => u.Roles.Any(r => r.RoleId == role.Id))
-                        .Select(role => new SimpleRoleModel 
-                        { 
+                        .Select(role => new SimpleRoleModel
+                        {
                             Id = role.Id,
-                            Name = role.Name 
+                            Name = role.Name
                         })
                 });
             }

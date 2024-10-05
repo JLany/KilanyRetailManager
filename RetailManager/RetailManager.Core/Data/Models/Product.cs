@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RetailManager.Core.Data.Models
 {
@@ -18,6 +14,6 @@ namespace RetailManager.Core.Data.Models
         public int QuantityInStock { get; set; }
         public bool IsTaxable { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime LastModified { get; set;}
+        public DateTime LastModified { get; set; }
     }
 }

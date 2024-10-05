@@ -1,8 +1,8 @@
+using RetailManager.Api;
+using RetailManager.Api.App_Start;
+using Swashbuckle.Application;
 using System.Web.Http;
 using WebActivatorEx;
-using RetailManager.Api;
-using Swashbuckle.Application;
-using RetailManager.Api.App_Start;
 
 #if DEBUG
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
@@ -25,7 +25,7 @@ namespace RetailManager.Api
 
                         // Add the custom operation filter for enabling passing the token in the requests to 
                         // the api.
-                        c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();    
+                        c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
 
                         // By default, the service root url is inferred from the request used to access the docs.
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not
@@ -72,7 +72,7 @@ namespace RetailManager.Api
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")

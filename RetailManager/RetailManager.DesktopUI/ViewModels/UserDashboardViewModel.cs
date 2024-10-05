@@ -1,18 +1,10 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
 using RetailManager.DesktopUI.Models;
-using RetailManager.UI.Core.ApiClients;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
 
 namespace RetailManager.DesktopUI.ViewModels
 {
@@ -75,7 +67,7 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public UserDisplayModel SelectedUser
         {
-            get => _selectedUser; 
+            get => _selectedUser;
             set
             {
                 _selectedUser = value;
@@ -108,8 +100,8 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public BindingList<RoleModel> AvailableRoles
         {
-            get 
-            {            
+            get
+            {
                 if (SelectedUser == null)
                 {
                     return new BindingList<RoleModel>();

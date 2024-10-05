@@ -1,13 +1,10 @@
-﻿using RetailManager.UI.Core.Models;
+﻿using RetailManager.UI.Core.Interfaces;
+using RetailManager.UI.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Http;
 using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
-using RetailManager.UI.Core.Interfaces;
 
 namespace RetailManager.UI.Core.ApiClients
 {

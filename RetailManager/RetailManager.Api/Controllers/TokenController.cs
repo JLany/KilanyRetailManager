@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RetailManager.Api.Data;
 using RetailManager.Api.Utils.Jwt;
 
 namespace RetailManager.Api.Controllers
