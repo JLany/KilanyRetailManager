@@ -24,6 +24,8 @@ namespace RetailManager.UI.Core.Extensions
                 .PerRequest<ISaleService, SaleService>()
                 .PerRequest<IAdminService, AdminService>();
 
+
+
             return container;
         }
     }

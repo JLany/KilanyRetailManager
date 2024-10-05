@@ -58,6 +58,7 @@ namespace RetailManager.UI.Core.ApiClients
             {
                 using (var response = await _apiClient.Client.GetAsync("User/Info"))
                 {
+                    // TODO: Feature: Add Refresh Token.
                     if (!response.IsSuccessStatusCode)
                     {
                         throw new Exception($"{response.ReasonPhrase}, authorization token might have been expired or currupted.");

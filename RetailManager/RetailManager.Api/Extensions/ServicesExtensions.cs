@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RetailManager.Api.Utils.Jwt;
 using System.Text;
 
 namespace RetailManager.Api.Extensions
@@ -26,6 +27,8 @@ namespace RetailManager.Api.Extensions
                         ClockSkew = TimeSpan.FromMinutes(5)
                     };
                 });
+
+            services.AddTransient<ITokenGenerator, JwtTokenGenerator>();
 
             return services;
         }

@@ -61,10 +61,7 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public async Task CashRegister()
         {
-            if (_salesViewModel == null)
-            {
-                _salesViewModel = IoC.Get<SalesViewModel>();
-            }
+            _salesViewModel ??= IoC.Get<SalesViewModel>();
 
             await ActivateItemAsync(_salesViewModel);
         }
