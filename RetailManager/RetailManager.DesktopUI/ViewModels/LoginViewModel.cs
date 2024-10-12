@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using RetailManager.DesktopUI.EventModels;
+using RetailManager.DesktopUI.UiEvents;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System.Windows;
@@ -9,15 +9,20 @@ namespace RetailManager.DesktopUI.ViewModels
     public class LoginViewModel : Screen
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IUserService _userService;
         private readonly IEventAggregator _events;
         private string _username;
         private string _password;
         private string _errorMessage;
         private bool _isLoading;
 
-        public LoginViewModel(IAuthenticationService authenticationService, IEventAggregator events)
+        public LoginViewModel(
+            IAuthenticationService authenticationService,
+            IUserService userService,
+            IEventAggregator events)
         {
             _authenticationService = authenticationService;
+            _userService = userService;
             _events = events;
 
             //TODO: Remove this after testing.
@@ -115,18 +120,28 @@ namespace RetailManager.DesktopUI.ViewModels
 
             try
             {
-                AuthenticationModel authentication =
-                    await _authenticationService.AuthenticateUserAsync(Username, Password);
+                //AuthenticationModel authentication =
+                //    await _authenticationService.AuthenticateUserAsync(Username, Password);
 
-                if (!authentication.IsAuthenticated)
+                //if (!authentication.IsAuthenticated)
+                //{
+                //    ErrorMessage = authentication.Error_Description;
+                //    return;
+                //}
+
+                //await _authenticationService.LoadLoggedInUserInfoAsync(authentication.Access_Token);
+
+                var result = await _authenticationService.LoginAsync(Username, Password);
+
+                if (!result.Success)
                 {
-                    ErrorMessage = authentication.Error_Description;
+                    ErrorMessage = result.Error;
                     return;
                 }
 
-                await _authenticationService.LoadLoggedInUserInfoAsync(authentication.Access_Token);
+                await _userService.LoadLoggedInUserInfoAsync();
 
-                await _events.PublishOnUIThreadAsync(new LogOnEvent());
+                await _events.PublishOnUIThreadAsync(new LoginUiEvent());
             }
             catch (Exception ex)
             {

@@ -26,4 +26,8 @@
     <ProjectReference Include="..\RetailManager.Core\RetailManager.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Utility\" />
+  </ItemGroup>
+
 </Project>

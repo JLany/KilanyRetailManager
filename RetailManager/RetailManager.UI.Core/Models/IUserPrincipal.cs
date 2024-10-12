@@ -10,5 +10,7 @@ namespace RetailManager.UI.Core.Models
         string Id { get; set; }
         string LastName { get; set; }
         string Token { get; set; }
+        DateTime Expiration {  get; set; }
+        string RefreshToken {  get; set; }
     }
 }

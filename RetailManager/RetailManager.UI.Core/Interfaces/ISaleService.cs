@@ -1,10 +1,10 @@
-﻿using RetailManager.UI.Core.Dtos;
+﻿using RetailManager.UI.Core.Models.Dtos;
 using System.Threading.Tasks;
 
 namespace RetailManager.UI.Core.Interfaces
 {
     public interface ISaleService
     {
-        Task PostSaleAsync(SaleDto saleDto);
+        Task CreateSaleAsync(SaleDto saleDto);
     }
 }

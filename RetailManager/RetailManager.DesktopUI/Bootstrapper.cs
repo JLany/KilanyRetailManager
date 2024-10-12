@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RetailManager.DesktopUI.Configuration;
+using RetailManager.UI.Core.Configuration;
 using RetailManager.DesktopUI.Extensions;
 using RetailManager.DesktopUI.Helpers;
 using RetailManager.DesktopUI.ViewModels;
@@ -39,7 +39,7 @@ namespace RetailManager.DesktopUI
         // This mehtod gets called by Initialize.
         protected override void Configure()
         {
-            var builder = Infrastructure.InitConfiguration(this.GetType().Assembly.Location);
+            var builder = Infrastructure.InitConfiguration();
             Infrastructure.ConfigureLogger(builder);
 
             _host = Host.CreateDefaultBuilder()
@@ -48,7 +48,7 @@ namespace RetailManager.DesktopUI
                     services
                         .AddMVVM(this)
                         .AddRetailManagerUiCore()
-                        .ConfigureAutoMapper();
+                        .ConfigureAutoMapper(); 
                 })
                 .UseSerilog()
                 .Build();

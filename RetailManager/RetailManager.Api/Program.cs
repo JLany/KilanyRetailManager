@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using RetailManager.Api.Data;
+using RetailManager.Api.Configuration;
+using RetailManager.Api.Data.Context;
+using RetailManager.Api.Data.Entities;
 using RetailManager.Api.Extensions;
 using RetailManager.Core.Extensions;
 
@@ -14,21 +16,34 @@ namespace RetailManager.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("KilanyRetailManagementIdentityDB")
-                ?? throw new InvalidOperationException("Connection string 'KilanyRetailManagementIdentityDB' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            var connectionString = builder.Configuration.GetConnectionString(Constants.RetailManagerAuthContextConnectionStringKey)
+                ?? throw new InvalidOperationException($"Connection string {Constants.RetailManagerAuthContextConnectionStringKey} not found.");
+
+            builder.Services.AddDbContext<RetailManagerAuthContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentityCore<RetailManagerAuthUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+            })
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<RetailManagerAuthContext>()
+                .AddSignInManager();
 
-            builder.Services.AddJwtBearerAuthentication();
+            var jwtSettings = builder.Configuration.GetSection(Constants.JwtSettingsSectionKey).Get<JwtSettings>();
+            builder.Services.AddJwtBearerAuthentication(jwtSettings);
+
+            builder.Services.AddAuthorization();
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddRetailManagerCore();
+            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(Constants.JwtSettingsSectionKey));
+
+            builder.Services.AddRetailManagerCore()
+                .AddServices();
+
+            builder.Services.AddRazorPages();
 
             builder.Services.AddSwaggerGen(setup =>
             {
@@ -38,6 +53,7 @@ namespace RetailManager.Api
                     Version = "v1.0"
                 });
             });
+
 
             var app = builder.Build();
 

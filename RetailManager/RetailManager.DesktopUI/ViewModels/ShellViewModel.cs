@@ -1,11 +1,11 @@
 ﻿using Caliburn.Micro;
-using RetailManager.DesktopUI.EventModels;
+using RetailManager.DesktopUI.UiEvents;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 
 namespace RetailManager.DesktopUI.ViewModels
 {
-    public class ShellViewModel : Conductor<Screen>, IHandle<LogOnEvent>
+    public class ShellViewModel : Conductor<Screen>, IHandle<LoginUiEvent>, IHandle<LogoutUiEvent>
     {
         private readonly IEventAggregator _events;
         private readonly IUserPrincipal _user;
@@ -39,10 +39,19 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public async Task LogOut()
         {
-            _authenticationService.EndUserSession();
+            await _authenticationService.LogoutAsync();
 
-            await DeactivateItemAsync(_salesViewModel, close: true);
-            _salesViewModel = null;
+            if (_salesViewModel is not null)
+            {
+                await DeactivateItemAsync(_salesViewModel, close: true);
+                _salesViewModel = null;
+            }
+
+            if (_userDashboardViewModel is not null)
+            {
+                await DeactivateItemAsync(_userDashboardViewModel, close: true);
+                _userDashboardViewModel = null;
+            }
 
             _loginViewModel = IoC.Get<LoginViewModel>();
             await ActivateItemAsync(_loginViewModel);
@@ -52,7 +61,8 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public async Task UserManagement()
         {
-            _userDashboardViewModel = IoC.Get<UserDashboardViewModel>();
+            _userDashboardViewModel ??= IoC.Get<UserDashboardViewModel>();
+
             await ActivateItemAsync(_userDashboardViewModel);
         }
 
@@ -63,7 +73,7 @@ namespace RetailManager.DesktopUI.ViewModels
             await ActivateItemAsync(_salesViewModel);
         }
 
-        public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
+        public async Task HandleAsync(LoginUiEvent message, CancellationToken cancellationToken)
         {
             await DeactivateItemAsync(_loginViewModel, close: true, cancellationToken);
 
@@ -71,6 +81,11 @@ namespace RetailManager.DesktopUI.ViewModels
             await ActivateItemAsync(_salesViewModel, cancellationToken);
 
             NotifyOfPropertyChange(() => IsUserLoggedIn);
+        }
+
+        async Task IHandle<LogoutUiEvent>.HandleAsync(LogoutUiEvent message, CancellationToken cancellationToken)
+        {
+            await LogOut();
         }
     }
 }

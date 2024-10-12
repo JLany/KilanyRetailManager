@@ -9,6 +9,6 @@ namespace RetailManager.Core.Interfaces
     /// </summary>
     public interface ISalePersistence
     {
-        Task<Sale> Create(SaleDto saleDto, string cashierId);
+        Task<Sale> Create(SaleRequest saleDto, string cashierId);
     }
 }

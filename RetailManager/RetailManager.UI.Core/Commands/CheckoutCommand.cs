@@ -1,5 +1,5 @@
-﻿using RetailManager.UI.Core.Dtos;
-using RetailManager.UI.Core.Interfaces;
+﻿using RetailManager.UI.Core.Interfaces;
+using RetailManager.UI.Core.Models.Dtos;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +29,7 @@ namespace RetailManager.UI.Core.Commands
                     .ToList()
             };
 
-            await _saleService.PostSaleAsync(saleDto);
+            await _saleService.CreateSaleAsync(saleDto);
         }
     }
 }

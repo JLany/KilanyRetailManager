@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
+using Microsoft.Extensions.Options;
 using RetailManager.DesktopUI.Cart;
 using RetailManager.DesktopUI.Models;
+using RetailManager.DesktopUI.UiEvents;
 using RetailManager.UI.Core.Commands;
+using RetailManager.UI.Core.Configuration;
+using RetailManager.UI.Core.Exceptions;
 using RetailManager.UI.Core.Interfaces;
+using RetailManager.UI.Core.Models;
 using System.ComponentModel;
 using System.Windows;
 
@@ -11,11 +16,12 @@ namespace RetailManager.DesktopUI.ViewModels
 {
     public class SalesViewModel : Screen
     {
+        private readonly IEventAggregator _events;
         private readonly IProductService _productService;
         private readonly ISaleService _saleService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
-
+        private readonly BusinessSettings _business;
         private BindingList<ListedProductDisplayModel> _products = new BindingList<ListedProductDisplayModel>();
         private BindingList<ICartItemDisplayModel> _cart = new BindingList<ICartItemDisplayModel>();
 
@@ -25,15 +31,19 @@ namespace RetailManager.DesktopUI.ViewModels
         private bool _isCheckingOut;
 
         public SalesViewModel(
+            IEventAggregator events,
             IProductService productService,
             ISaleService saleService,
             IMapper mapper,
-            IConfiguration config)
+            IConfiguration config,
+            IOptions<BusinessSettings> business)
         {
+            _events = events;
             _productService = productService;
             _saleService = saleService;
             _mapper = mapper;
             _config = config;
+            _business = business.Value;
         }
 
         // Here we override OnInitialize rather that on activate to support going back 
@@ -59,9 +69,23 @@ namespace RetailManager.DesktopUI.ViewModels
 
         private async Task InitializeFormAsync()
         {
-            Products = new BindingList<ListedProductDisplayModel>((await LoadProductsAsync()).ToList());
-            Cart = new BindingList<ICartItemDisplayModel>();
+            try
+            {
+                Products = new BindingList<ListedProductDisplayModel>(
+                    (await LoadProductsAsync())
+                    .ToList());
+            }
+            catch (UnauthorizedException)
+            {
+                MessageBox.Show("Your session has expired", "An error occurred"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
 
+                await _events.PublishOnUIThreadAsync(new LogoutUiEvent());
+
+                throw;
+            }
+
+            Cart = new BindingList<ICartItemDisplayModel>();
             ItemQuantity = 1;
 
             NotifyOfPropertyChange(() => SubTotal);
@@ -71,12 +95,14 @@ namespace RetailManager.DesktopUI.ViewModels
 
         private async Task<IEnumerable<ListedProductDisplayModel>> LoadProductsAsync()
         {
-            var products = await _productService.GetProductsAsync();
+            var products = await _productService.GetAllProductsAsync();
 
             // Map from ListedProductViewModel to DisplayModel.
             return _mapper
                 .Map<IEnumerable<ListedProductDisplayModel>>(products);
         }
+
+        #region UI Properties
 
         public BindingList<ListedProductDisplayModel> Products
         {
@@ -190,6 +216,8 @@ namespace RetailManager.DesktopUI.ViewModels
             }
         }
 
+        #endregion
+
         public void AddToCart()
         {
             new AddToCartCommand(new BindingListCart(Cart), SelectedProduct, ItemQuantity)
@@ -226,6 +254,13 @@ namespace RetailManager.DesktopUI.ViewModels
 
                 await InitializeFormAsync();
             }
+            catch (UnauthorizedException)
+            {
+                MessageBox.Show("Your session has expired", "An error occurred"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await _events.PublishOnUIThreadAsync(new LogoutUiEvent());
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "An error occurred"
@@ -247,7 +282,7 @@ namespace RetailManager.DesktopUI.ViewModels
 
         private decimal CalculateTax()
         {
-            decimal taxRate = decimal.Divide(_config.GetTaxRate(), 100);
+            decimal taxRate = decimal.Divide(_business.TaxRate, 100);
             decimal taxAmount = Cart
                 .Where(item => item.Product.IsTaxable)
                 .Aggregate(0M,

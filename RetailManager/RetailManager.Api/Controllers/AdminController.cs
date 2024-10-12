@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RetailManager.Api.Data;
+using RetailManager.Api.Data.Context;
+using RetailManager.Api.Data.Entities;
+using RetailManager.Api.Interfaces;
+using RetailManager.Api.Models.Requests;
 using RetailManager.Core.Data.Dtos;
 using RetailManager.Core.Data.Models;
 
@@ -12,18 +16,17 @@ namespace RetailManager.Api.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly ApplicationDbContext _context;
+        private readonly UserManager<RetailManagerAuthUser> _userManager;
+        private readonly IUserRoleService _userRoles;
 
         public AdminController(
-            UserManager<IdentityUser> userManager,
+            UserManager<RetailManagerAuthUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            ApplicationDbContext context)
+            RetailManagerAuthContext context,
+            IUserRoleService userRoles)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
-            _context = context;
+            _userRoles = userRoles;
         }
 
         [HttpGet]
@@ -33,13 +36,7 @@ namespace RetailManager.Api.Controllers
             IEnumerable<UserRolesViewModel> users;
 
             var contextUsers = _userManager.Users.ToList();
-            var userRoles = _context.UserRoles
-                .Join(
-                _context.Roles,
-                userRole => userRole.RoleId,
-                role => role.Id,
-                (userRole, role) => new { userRole.UserId, userRole.RoleId, role.Name }
-                );
+            var userRoles = _userRoles.GetUserRoles();
 
             users = contextUsers.Select(user => new UserRolesViewModel
             {
@@ -50,7 +47,7 @@ namespace RetailManager.Api.Controllers
                     .Select(role => new SimpleRoleModel
                     {
                         Id = role.RoleId,
-                        Name = role.Name
+                        Name = role.RoleName
                     })
             });
 
@@ -61,7 +58,7 @@ namespace RetailManager.Api.Controllers
         [Route("RoleList")]
         public IActionResult GetAllRoles()
         {
-            var contextRoles = _context.Roles.ToList();
+            var contextRoles = _userRoles.GetRoles().ToList();
 
             return Ok(contextRoles
                 .Select(role => new SimpleRoleModel
@@ -74,20 +71,18 @@ namespace RetailManager.Api.Controllers
 
         [HttpPost]
         [Route("AddToRole")]
-        public async Task<IActionResult> AddToRole(UserRoleDto userRole)
+        public async Task<IActionResult> AddToRole(UserRoleRequest userRole)
         {
-            var user = await _userManager.FindByIdAsync(userRole.UserId);
-            await _userManager.AddToRoleAsync(user, userRole.Role);
+            await _userRoles.AddToRoleAsync(userRole);
 
             return Ok();
         }
 
         [HttpPost]
         [Route("RemoveFromRole")]
-        public async Task<IActionResult> RemoveFromRole(UserRoleDto userRole)
+        public async Task<IActionResult> RemoveFromRole(UserRoleRequest userRole)
         {
-            var user = await _userManager.FindByIdAsync(userRole.UserId);
-            await _userManager.RemoveFromRoleAsync(user, userRole.Role);
+            await _userRoles.RemoveFromRoleAsync(userRole);
 
             return Ok();
         }
@@ -97,25 +92,7 @@ namespace RetailManager.Api.Controllers
         [Route("InitRoles")]
         public async Task<IActionResult> InitRoles()
         {
-            string[] roles = { "Admin", "Manager", "Cashier" };
-
-            foreach (var role in roles)
-            {
-                var roleExists = await _roleManager.RoleExistsAsync(role);
-
-                if (!roleExists)
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
-
-            var admin = await _userManager.FindByEmailAsync("test@test.test");
-
-            if (admin != null)
-            {
-                await _userManager.AddToRoleAsync(admin, "Admin");
-                await _userManager.AddToRoleAsync(admin, "Cashier");
-            }
+            await _userRoles.InitRoles();
 
             return Ok();
         }

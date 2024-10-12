@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
 using RetailManager.DesktopUI.Models;
+using RetailManager.DesktopUI.UiEvents;
+using RetailManager.UI.Core.Exceptions;
 using RetailManager.UI.Core.Interfaces;
 using RetailManager.UI.Core.Models;
 using System.ComponentModel;
@@ -10,6 +12,7 @@ namespace RetailManager.DesktopUI.ViewModels
 {
     public class UserDashboardViewModel : Screen
     {
+        private readonly IEventAggregator _events;
         private readonly IAdminService _adminService;
         private readonly IMapper _mapper;
         private UserDisplayModel _selectedUser;
@@ -18,8 +21,12 @@ namespace RetailManager.DesktopUI.ViewModels
         private BindingList<UserDisplayModel> _users;
         private IEnumerable<RoleModel> _roles;
 
-        public UserDashboardViewModel(IAdminService adminService, IMapper mapper)
+        public UserDashboardViewModel(
+            IEventAggregator events,
+            IAdminService adminService,
+            IMapper mapper)
         {
+            _events = events;
             _adminService = adminService;
             _mapper = mapper;
         }
@@ -43,8 +50,20 @@ namespace RetailManager.DesktopUI.ViewModels
 
         private async Task InitializeFormAsync()
         {
-            Users = new BindingList<UserDisplayModel>(await LoadUsers());
-            _roles = await _adminService.GetRolesAsync();
+            try
+            {
+                Users = new BindingList<UserDisplayModel>(await LoadUsers());
+                _roles = await _adminService.GetRolesAsync();
+            }
+            catch (UnauthorizedException)
+            {
+                MessageBox.Show("Your session has expired", "An error occurred"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await _events.PublishOnUIThreadAsync(new LogoutUiEvent());
+
+                throw;
+            }
         }
 
         private async Task<List<UserDisplayModel>> LoadUsers()
@@ -53,6 +72,8 @@ namespace RetailManager.DesktopUI.ViewModels
 
             return _mapper.Map<List<UserDisplayModel>>(users);
         }
+
+        #region UI Properties
 
         public BindingList<UserDisplayModel> Users
         {
@@ -116,6 +137,8 @@ namespace RetailManager.DesktopUI.ViewModels
 
         public bool CanAddToRole => SelectedUser != null && RoleToAdd != null;
 
+        #endregion
+
         public async void AddToRole()
         {
             var userRole = new UserRoleModel
@@ -135,6 +158,15 @@ namespace RetailManager.DesktopUI.ViewModels
 
                 NotifyOfPropertyChange(() => SelectedUser);
                 NotifyOfPropertyChange(() => AvailableRoles);
+            }
+            catch (UnauthorizedException)
+            {
+                MessageBox.Show("Your session has expired", "An error occurred"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await _events.PublishOnUIThreadAsync(new LogoutUiEvent());
+
+                throw;
             }
             catch (Exception)
             {
@@ -163,6 +195,15 @@ namespace RetailManager.DesktopUI.ViewModels
 
                 NotifyOfPropertyChange(() => SelectedUser);
                 NotifyOfPropertyChange(() => AvailableRoles);
+            }
+            catch (UnauthorizedException)
+            {
+                MessageBox.Show("Your session has expired", "An error occurred"
+                    , MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await _events.PublishOnUIThreadAsync(new LogoutUiEvent());
+
+                throw;
             }
             catch (Exception)
             {

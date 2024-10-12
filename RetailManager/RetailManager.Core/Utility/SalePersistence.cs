@@ -1,4 +1,6 @@
-﻿using RetailManager.Core.Data.Dtos;
+﻿using Microsoft.Extensions.Options;
+using RetailManager.Core.Configuration;
+using RetailManager.Core.Data.Dtos;
 using RetailManager.Core.Data.Models;
 using RetailManager.Core.Interfaces;
 using System.Collections.Generic;
@@ -17,15 +19,22 @@ namespace RetailManager.Core.Utility
         private readonly ISaleDetailRepository _saleDetailRepository;
         private readonly IProductRepository _productRepository;
         private readonly IConfiguration _config;
+        private readonly TaxSettings _taxSettings;
 
-        public SalePersistence(IUnitOfWork unitOfWork, ISaleRepository saleRepository, ISaleDetailRepository saleDetailRepository
-            , IProductRepository productRepository, IConfiguration config)
+        public SalePersistence(
+            IUnitOfWork unitOfWork,
+            ISaleRepository saleRepository,
+            ISaleDetailRepository saleDetailRepository,
+            IProductRepository productRepository,
+            IConfiguration config,
+            IOptions<TaxSettings> taxSettings)
         {
             _unitOfWork = unitOfWork;
             _saleRepository = saleRepository;
             _saleDetailRepository = saleDetailRepository;
             _productRepository = productRepository;
             _config = config;
+            _taxSettings = taxSettings.Value;
         }
 
         /// <summary>
@@ -34,7 +43,7 @@ namespace RetailManager.Core.Utility
         /// <param name="saleDto"></param>
         /// <param name="cashierId"></param>
         /// <returns>The created <see cref="Sale"/> model in the database.</returns>
-        public async Task<Sale> Create(SaleDto saleDto, string cashierId)
+        public async Task<Sale> Create(SaleRequest saleDto, string cashierId)
         {
             Sale sale = new Sale
             {
@@ -55,7 +64,7 @@ namespace RetailManager.Core.Utility
                         Quantity = sd.Quantity,
                     });
 
-                var taxRate = decimal.Divide(_config.GetTaxRate(), 100);
+                var taxRate = decimal.Divide(_taxSettings.TaxRate, 100);
                 decimal subTotal = 0M;
                 decimal taxAmount = 0M;
 

@@ -74,18 +74,18 @@ namespace RetailManager.Api.Controllers
 
         [HttpPost]
         [Route("AddToRole")]
-        public IHttpActionResult AddToRole(UserRoleDto userRole)
+        public IHttpActionResult AddToRole(UserRoleRequest userRole)
         {
-            UserManager.AddToRole(userRole.UserId, userRole.Role);
+            //UserManager.AddToRole(userRole.UserId, userRole.Role);
 
             return Ok();
         }
 
         [HttpPost]
         [Route("RemoveFromRole")]
-        public IHttpActionResult RemoveFromRole(UserRoleDto userRole)
+        public IHttpActionResult RemoveFromRole(UserRoleRequest userRole)
         {
-            UserManager.RemoveFromRole(userRole.UserId, userRole.Role);
+            //UserManager.RemoveFromRole(userRole.UserId, userRole.Role);
 
             return Ok();
         }

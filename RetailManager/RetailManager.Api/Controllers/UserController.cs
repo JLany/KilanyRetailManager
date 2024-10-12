@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RetailManager.Api.Data.Entities;
 using RetailManager.Core.Data.Models;
 using RetailManager.Core.Interfaces;
 
@@ -12,9 +13,9 @@ namespace RetailManager.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepo;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<RetailManagerAuthUser> _userManager;
 
-        public UserController(IUserRepository userRepo, UserManager<IdentityUser> userManager)
+        public UserController(IUserRepository userRepo, UserManager<RetailManagerAuthUser> userManager)
         {
             _userRepo = userRepo;
             _userManager = userManager;

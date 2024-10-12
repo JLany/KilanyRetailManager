@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RetailManager.Api.Data.Entities;
 using RetailManager.Core.Data.Dtos;
 using RetailManager.Core.Data.Models;
 using RetailManager.Core.Interfaces;
@@ -14,9 +15,9 @@ namespace RetailManager.Api.Controllers
     {
         private readonly ISaleRepository _saleRepository;
         private readonly ISalePersistence _salePersistence;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<RetailManagerAuthUser> _userManager;
 
-        public SaleController(ISaleRepository saleRepo, ISalePersistence salePersistence, UserManager<IdentityUser> userManager)
+        public SaleController(ISaleRepository saleRepo, ISalePersistence salePersistence, UserManager<RetailManagerAuthUser> userManager)
         {
             _saleRepository = saleRepo;
             _salePersistence = salePersistence;
@@ -35,7 +36,7 @@ namespace RetailManager.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Cashier")]
-        public async Task<IActionResult> Create(SaleDto saleDto)
+        public async Task<IActionResult> Create(SaleRequest saleDto)
         {
             var userId = _userManager.GetUserId(User);
             Sale sale = await _salePersistence.Create(saleDto, userId);

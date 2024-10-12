@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RetailManager.DesktopUI.Models;
 using RetailManager.UI.Core.Models;
+using RetailManager.UI.Core.Models.Responses;
 
 namespace RetailManager.DesktopUI.Extensions
 {
@@ -33,6 +34,8 @@ namespace RetailManager.DesktopUI.Extensions
                 config.CreateMap<ListedProductViewModel, ListedProductDisplayModel>();
                 config.CreateMap<CartItemModel, CartItemDisplayModel>();
                 config.CreateMap<UserModel, UserDisplayModel>();
+                config.CreateMap<ProductResponse, ListedProductViewModel>();
+                config.CreateMap<ProductResponse, ListedProductDisplayModel>();
             });
 
             return services;

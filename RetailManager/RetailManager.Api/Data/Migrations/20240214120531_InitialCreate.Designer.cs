@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailManager.Api.Data;
+using RetailManager.Api.Data.Context;
 
 #nullable disable
 
 namespace RetailManager.Api.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(RetailManagerAuthContext))]
     [Migration("20240214120531_InitialCreate")]
     partial class InitialCreate
     {

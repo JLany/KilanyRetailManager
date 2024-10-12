@@ -33,7 +33,7 @@ namespace RetailManager.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Cashier")]
-        public async Task<IHttpActionResult> Create(SaleDto saleDto)
+        public async Task<IHttpActionResult> Create(SaleRequest saleDto)
         {
             Sale sale = await _salePersistence.Create(saleDto, User.Identity.GetUserId());
 
